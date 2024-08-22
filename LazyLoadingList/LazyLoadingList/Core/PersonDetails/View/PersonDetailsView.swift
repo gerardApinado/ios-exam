@@ -119,13 +119,17 @@ class PersonDetailsView: BaseUIView {
         addSubview(birthdate)
         birthdate.snp.makeConstraints { make in
             make.top.equalTo(lastName.snp.bottom).offset(14)
-            configureConstraints(make)
+            make.left.equalTo(lastName)
+            make.width.equalToSuperview().multipliedBy(0.42)
+            make.height.equalTo(50)
         }
         
         addSubview(age)
         age.snp.makeConstraints { make in
-            make.top.equalTo(birthdate.snp.bottom).offset(14)
-            configureConstraints(make)
+            make.top.equalTo(lastName.snp.bottom).offset(14)
+            make.left.equalTo(birthdate.snp.right).offset(5)
+            make.trailing.equalTo(lastName)
+            make.height.equalTo(50)
         }
         
         addSubview(email)
@@ -165,6 +169,5 @@ class PersonDetailsView: BaseUIView {
         phone.data              = data.phone
         contactPerson.data      = data.contactPerson
         contactPersonPhone.data = data.contactPersonPhone
-        
     }
 }

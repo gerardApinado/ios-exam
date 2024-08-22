@@ -27,7 +27,7 @@ class PersonListView: BaseUIView {
     override func setup() {
         addSubview(table)
         table.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.edges.equalTo(safeAreaLayoutGuide)
         }
     }
 }
@@ -39,16 +39,30 @@ extension PersonListView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! PersonListViewCell
-        
+        cell.backgroundColor = indexPath.row%2 == 0 ? .lightGray.withAlphaComponent(0.5) : .white
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 75
+        let height = tableView.frame.size.height/10
+        return height
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         delegate?.didTapPerson(self)
     }
-    
+}
+
+extension PersonListView: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        let rowHeight = self.table.frame.size.height/10
+        let tableHeight = table.bounds.size.height
+        let contentHeight = table.contentSize.height
+        let contentOffsetY = scrollView.contentOffset.y
+        
+        if(contentOffsetY+tableHeight >= contentHeight){
+            // Load only once
+            print("DEBUG: Load More Person")
+        }
+    }
 }

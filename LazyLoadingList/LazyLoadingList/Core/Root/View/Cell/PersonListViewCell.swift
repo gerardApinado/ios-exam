@@ -49,7 +49,7 @@ class PersonListViewCell: BaseUITableViewCell {
         avatarImg.snp.makeConstraints { make in
             make.left.equalToSuperview().offset(16)
             make.centerY.equalToSuperview()
-            make.height.equalToSuperview().multipliedBy(0.9)
+            make.height.equalToSuperview().multipliedBy(0.85)
             make.width.equalTo(avatarImg.snp.height)
         }
         
@@ -73,7 +73,10 @@ class PersonListViewCell: BaseUITableViewCell {
     }
     
     func configCell(data: Person) {
-        
+        // load avatar Img
+        fullnameLbl.text = "\(data.firstName) \(data.lastName)"
+        emailLbl.text = data.email
+        phoneLbl.text = data.phone
     }
     
 }

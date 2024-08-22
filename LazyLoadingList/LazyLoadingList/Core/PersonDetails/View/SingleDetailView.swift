@@ -16,6 +16,7 @@ class SingleDetailView: BaseUIView {
     private lazy var titleLbl: UILabel = {
         let lbl = UILabel()
         lbl.font = .systemFont(ofSize: 16, weight: .medium)
+        lbl.textColor = .gray
         return lbl
     }()
     
