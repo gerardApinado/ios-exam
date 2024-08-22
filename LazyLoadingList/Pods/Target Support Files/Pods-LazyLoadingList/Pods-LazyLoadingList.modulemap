@@ -1,0 +1,6 @@
+module Pods_LazyLoadingList {
+  umbrella header "Pods-LazyLoadingList-umbrella.h"
+
+  export *
+  module * { export * }
+}
