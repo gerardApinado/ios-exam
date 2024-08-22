@@ -19,3 +19,15 @@ struct Person : Codable {
     let contactPerson: String
     let contactPersonPhone: String
 }
+
+class SamplePersonDetails {
+    static let singlePerson = Person(firstName: "Max",
+                              lastName: "Verstappen",
+                              birthday: "1998-09-08",
+                              age: 24,
+                              email: "email@emial.com",
+                              phone: "+1234567890",
+                              address: "Tondo, Manila",
+                              contactPerson: "Mary Loi",
+                              contactPersonPhone: "+1234567890")
+}

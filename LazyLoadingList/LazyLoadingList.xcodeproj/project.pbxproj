@@ -21,6 +21,7 @@
 		D5F0ACB52C770E44000E087C /* PersonListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F0ACB42C770E44000E087C /* PersonListVC.swift */; };
 		D5F0ACBA2C770E45000E087C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5F0ACB92C770E45000E087C /* Assets.xcassets */; };
 		D5F0ACBD2C770E45000E087C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5F0ACBB2C770E45000E087C /* LaunchScreen.storyboard */; };
+		F9BD33802C77813C0001F363 /* BaseUITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9BD337F2C77813C0001F363 /* BaseUITableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		D5F0ACBC2C770E45000E087C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D5F0ACBE2C770E45000E087C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E34AEA3D8973F0EDC4A17A9C /* Pods-LazyLoadingList.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LazyLoadingList.debug.xcconfig"; path = "Target Support Files/Pods-LazyLoadingList/Pods-LazyLoadingList.debug.xcconfig"; sourceTree = "<group>"; };
+		F9BD337F2C77813C0001F363 /* BaseUITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseUITableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				D52302862C7739F0003B5989 /* BaseUIView.swift */,
+				F9BD337F2C77813C0001F363 /* BaseUITableViewCell.swift */,
 			);
 			path = BaseFiles;
 			sourceTree = "<group>";
@@ -312,6 +315,7 @@
 				D5F0ACB12C770E44000E087C /* AppDelegate.swift in Sources */,
 				D52302872C7739F0003B5989 /* BaseUIView.swift in Sources */,
 				D5EB2BEA2C77135800FDBC17 /* Person.swift in Sources */,
+				F9BD33802C77813C0001F363 /* BaseUITableViewCell.swift in Sources */,
 				D5F0ACB32C770E44000E087C /* SceneDelegate.swift in Sources */,
 				D5EB2BEE2C7715E200FDBC17 /* PersonListView.swift in Sources */,
 				D52302792C772D70003B5989 /* PersonDetailsVC.swift in Sources */,

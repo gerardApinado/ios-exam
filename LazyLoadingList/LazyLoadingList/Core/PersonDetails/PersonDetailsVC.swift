@@ -17,9 +17,10 @@ class PersonDetailsVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Person's Details"
+        title = "Details"
         
         view = contentView
+        contentView.configDetails(data: SamplePersonDetails.singlePerson)
     }
 
 }

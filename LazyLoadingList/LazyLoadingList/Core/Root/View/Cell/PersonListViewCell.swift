@@ -8,23 +8,26 @@
 import UIKit
 import SnapKit
 
-class PersonListViewCell: UITableViewCell {
+class PersonListViewCell: BaseUITableViewCell {
     
     private lazy var phoneLbl: UILabel = {
         let lbl = UILabel()
         lbl.text = "+1234567890"
+        lbl.font = .systemFont(ofSize: 16)
         return lbl
     }()
     
     private lazy var emailLbl: UILabel = {
         let lbl = UILabel()
         lbl.text = "max@email.com"
+        lbl.font = .systemFont(ofSize: 16)
         return lbl
     }()
     
     private lazy var fullnameLbl: UILabel = {
         let lbl = UILabel()
         lbl.text = "Max Vestappen"
+        lbl.font = .systemFont(ofSize: 18, weight: .semibold)
         return lbl
     }()
     
@@ -33,17 +36,15 @@ class PersonListViewCell: UITableViewCell {
         return view
     }()
     
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupUI()
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        avatarImg.layer.cornerRadius = avatarImg.frame.size.height / 2
+        avatarImg.clipsToBounds = true
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupUI(){
+    override func setupUI(){
+        selectionStyle = .none
+        
         addSubview(avatarImg)
         avatarImg.snp.makeConstraints { make in
             make.left.equalToSuperview().offset(16)
@@ -69,6 +70,10 @@ class PersonListViewCell: UITableViewCell {
             make.left.equalTo(fullnameLbl)
             make.top.equalTo(emailLbl.snp.bottom)
         }
+    }
+    
+    func configCell(data: Person) {
+        
     }
     
 }

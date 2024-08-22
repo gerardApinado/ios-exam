@@ -11,7 +11,7 @@ protocol PersonListViewDelegate: AnyObject {
     func didTapPerson(_ view:PersonListView)
 }
 
-class PersonListView: UIView {
+class PersonListView: BaseUIView {
     
     weak var delegate: PersonListViewDelegate?
     
@@ -20,20 +20,15 @@ class PersonListView: UIView {
         tbl.register(PersonListViewCell.self, forCellReuseIdentifier: "cell")
         tbl.delegate = self
         tbl.dataSource = self
+        tbl.separatorStyle = .none
         return tbl
     }()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
+    override func setup() {
         addSubview(table)
         table.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 

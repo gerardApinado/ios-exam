@@ -19,7 +19,7 @@ class BaseUIView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setup() {
+    internal func setup() {
         
     }
 
