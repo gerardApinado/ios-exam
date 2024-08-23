@@ -10,13 +10,15 @@ import Foundation
 class PersonListViewModel {
     
     var persons: [Person]?
-    
+    var reloadData: (() -> Void)?
 
     func fetchPersons() {
-        PersonService.shared.fetchCompletePersonsDetails(results: 10) { result in
+        PersonService.shared.fetchCompletePersonsDetails(results: 30) { [weak self] result in
             switch result {
             case .success(let data):
-                print("DEBUG: save remote data to local")
+                self?.savePersonToUserDefaults(person: data)
+                self?.persons = self?.loadPersonFromUserDefaults()
+                self?.reloadData?()
             case .failure(let failure):
                 print("DEBUG: Error fetching persons complete details")
             }
@@ -27,5 +29,28 @@ class PersonListViewModel {
         PersonService.shared.loadMorePersons {
             print("DEBUG: load more 10 persons")
         }
+    }
+    
+    private func savePersonToUserDefaults(person: [Person]) {
+        let encoder = JSONEncoder()
+        do {
+            let data = try encoder.encode(person)
+            UserDefaults.standard.set(data, forKey: Constants.Defaults.personsDefaultKey)
+        } catch {
+            print("Failed to encode person: \(error)")
+        }
+    }
+    
+    func loadPersonFromUserDefaults() -> [Person]? {
+        if let data = UserDefaults.standard.data(forKey: Constants.Defaults.personsDefaultKey) {
+            let decoder = JSONDecoder()
+            do {
+                let person = try decoder.decode([Person].self, from: data)
+                return person
+            } catch {
+                print("Failed to decode person: \(error)")
+            }
+        }
+        return nil
     }
 }

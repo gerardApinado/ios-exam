@@ -13,14 +13,23 @@ class PersonDetailsVC: UIViewController {
         let view = PersonDetailsView()
         return view
     }()
-
+    
+    init(data: Person) {
+        super.init(nibName: nil, bundle: nil)
+        contentView.configDetails(data: data)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         title = "Details"
         
         view = contentView
-        contentView.configDetails(data: PersonMockData.singlePerson)
+//        contentView.configDetails(data: PersonMockData.singlePerson)
     }
 
 }

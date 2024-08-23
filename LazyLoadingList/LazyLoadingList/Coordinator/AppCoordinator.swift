@@ -26,8 +26,8 @@ class AppCoordinator {
         window.makeKeyAndVisible()
     }
     
-    func routeToPersonDetails() {
-        let personDetailsVC = PersonDetailsVC()
+    func routeToPersonDetails(data: Person) {
+        let personDetailsVC = PersonDetailsVC(data: data)
         navigationController.pushViewController(personDetailsVC, animated: true)
     }
     

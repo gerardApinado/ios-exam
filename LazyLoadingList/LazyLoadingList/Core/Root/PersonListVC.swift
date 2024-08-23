@@ -29,6 +29,13 @@ class PersonListVC: UIViewController {
         navigationItem.backBarButtonItem = backButton
         
         viewModel.fetchPersons()
+        viewModel.reloadData = {
+            DispatchQueue.main.async { [weak self] in
+                if let persons = self?.viewModel.persons {
+                    self?.contentView.configPersonList(data: persons)
+                }
+            }
+        }
         
         view = contentView
     }
@@ -36,9 +43,8 @@ class PersonListVC: UIViewController {
 }
 
 extension PersonListVC: PersonListViewDelegate {
-    // must handled by the coordinator - MVVMC
-    func didTapPerson(_ view: PersonListView) {
-        coordinator?.routeToPersonDetails()
+    func didTapPerson(_ view: PersonListView, data: Person) {
+        coordinator?.routeToPersonDetails(data: data)
     }
 }
 

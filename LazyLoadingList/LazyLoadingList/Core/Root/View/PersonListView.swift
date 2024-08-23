@@ -8,12 +8,13 @@
 import UIKit
 
 protocol PersonListViewDelegate: AnyObject {
-    func didTapPerson(_ view:PersonListView)
+    func didTapPerson(_ view:PersonListView, data: Person)
 }
 
 class PersonListView: BaseUIView {
     
     weak var delegate: PersonListViewDelegate?
+    private var persons : [Person] = []
     
     private lazy var table: UITableView = {
         let tbl = UITableView()
@@ -30,16 +31,22 @@ class PersonListView: BaseUIView {
             make.edges.equalTo(safeAreaLayoutGuide)
         }
     }
+    
+    func configPersonList(data: [Person]){
+        persons = data
+        table.reloadData()
+    }
 }
 
 extension PersonListView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 30
+        return persons.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! PersonListViewCell
         cell.backgroundColor = indexPath.row%2 == 0 ? .lightGray.withAlphaComponent(0.5) : .white
+        cell.configCell(data: persons[indexPath.row])
         return cell
     }
     
@@ -49,7 +56,7 @@ extension PersonListView: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.didTapPerson(self)
+        delegate?.didTapPerson(self, data: persons[indexPath.row])
     }
 }
 

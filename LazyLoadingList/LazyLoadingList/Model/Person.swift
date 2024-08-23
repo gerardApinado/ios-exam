@@ -74,7 +74,5 @@ struct PersonMockData {
         contactPerson: Person.ContactPerson(
             name: Person.Name(first: "Mary Loi", last: "Yves"),
             phone: "+0987654321")
-//        contactPerson: Person.Name(first: "Mary Loi", last: "Yves"),
-//        contactPersonPhone: "+0987654321"
     )
 }
