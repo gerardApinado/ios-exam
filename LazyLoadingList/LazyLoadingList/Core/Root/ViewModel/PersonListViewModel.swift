@@ -14,8 +14,13 @@ class PersonListViewModel {
 
     func fetchPersons() {
         if UserDefaults.standard.data(forKey: Constants.Defaults.personsDefaultKey) != nil {
-            self.persons = self.loadPersonFromUserDefaults()
-            self.reloadData?()
+            // reset paging to 1
+            UserDefaults.standard.set(1, forKey: Constants.Defaults.personsPageDefaultKey)
+            
+            if let localPersons = self.loadPersonFromUserDefaults(){
+                self.persons = Array(localPersons.prefix(10))
+                self.reloadData?()
+            }
             return
         }
         
@@ -23,8 +28,10 @@ class PersonListViewModel {
             switch result {
             case .success(let data):
                 self?.savePersonToUserDefaults(person: data)
-                self?.persons = self?.loadPersonFromUserDefaults()
-                self?.reloadData?()
+                if let localPerson = self?.loadPersonFromUserDefaults(){
+                    self?.persons = Array(localPerson.prefix(10))
+                    self?.reloadData?()
+                }
             case .failure(_):
                 print("DEBUG: Error fetching persons complete details")
             }
@@ -32,18 +39,32 @@ class PersonListViewModel {
     }
     
     func loadMorePersons(completion: @escaping () -> Void) {
-        // add local loading
-        
-        // remote loading
-        PersonService.shared.loadMoreCompletePersonsDetails(results: 10) { [weak self] result in
-            switch result {
-            case .success(let data):
-                self?.appendPersonsToUserDefaults(newPersons: data)
-                self?.persons = self?.loadPersonFromUserDefaults()
-                self?.reloadData?()
+        // local loading
+        if let persons = self.persons,
+           let localPersons = self.loadPersonFromUserDefaults(),
+           persons.count != localPersons.count {
+            let nextPage = UserDefaults.standard.integer(forKey: Constants.Defaults.personsPageDefaultKey)+1
+            if let localPerson = self.loadPersonFromUserDefaults(){
+                let results = 10*nextPage
+                self.persons = Array(localPerson.prefix(results))
+                self.reloadData?()
+                print("DEBUG: load local persons: Persons \(self.persons?.count ?? 0)")
+                UserDefaults.standard.set(nextPage, forKey: Constants.Defaults.personsPageDefaultKey)
                 completion()
-            case .failure(_):
-                print("DEBUG: Error fetching more persons complete details")
+            }
+        } else {
+            // remote loading
+            PersonService.shared.loadMoreCompletePersonsDetails(results: 10) { [weak self] result in
+                switch result {
+                case .success(let data):
+                    self?.appendPersonsToUserDefaults(newPersons: data)
+                    self?.persons = self?.loadPersonFromUserDefaults()
+                    self?.reloadData?()
+                    print("DEBUG: load remote persons: Persons \(self?.persons?.count ?? 0)")
+                    completion()
+                case .failure(_):
+                    print("DEBUG: Error fetching more persons complete details")
+                }
             }
         }
     }
@@ -60,8 +81,10 @@ class PersonListViewModel {
             switch result {
             case .success(let data):
                 self?.savePersonToUserDefaults(person: data)
-                self?.persons = self?.loadPersonFromUserDefaults()
-                self?.reloadData?()
+                if let localPerson = self?.loadPersonFromUserDefaults(){
+                    self?.persons = Array(localPerson.prefix(10))
+                    self?.reloadData?()
+                }
             case .failure(_):
                 print("DEBUG: Error fetching persons complete details")
             }

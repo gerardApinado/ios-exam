@@ -80,7 +80,7 @@ extension PersonListView: UIScrollViewDelegate {
         let contentHeight = table.contentSize.height
         let contentOffsetY = scrollView.contentOffset.y
         
-        if(contentOffsetY+tableHeight > contentHeight &&  contentHeight > 0){
+        if(contentOffsetY+tableHeight > contentHeight && contentHeight > 0 && contentOffsetY > 0){
             if !isFetchingMoreData {
                 self.isFetchingMoreData = true
                 delegate?.willLoadMorePersons(self) { [weak self] in

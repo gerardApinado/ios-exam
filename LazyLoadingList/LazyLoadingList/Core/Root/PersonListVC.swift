@@ -45,7 +45,6 @@ class PersonListVC: UIViewController {
 extension PersonListVC: PersonListViewDelegate {
     func willLoadMorePersons(_ view: PersonListView, completion: @escaping () -> Void) {
         viewModel.loadMorePersons {
-            print("DEBUG: Loaded +10")
             completion()
         }
     }
