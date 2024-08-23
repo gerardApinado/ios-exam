@@ -12,7 +12,13 @@ class PersonListViewModel {
     var persons: [Person]?
     var reloadData: (() -> Void)?
 
-    func fetchPersons() {        
+    func fetchPersons() {
+        if UserDefaults.standard.data(forKey: Constants.Defaults.personsDefaultKey) != nil {
+            self.persons = self.loadPersonFromUserDefaults()
+            self.reloadData?()
+            return
+        }
+        
         PersonService.shared.fetchCompletePersonsDetails(results: 30) { [weak self] result in
             switch result {
             case .success(let data):

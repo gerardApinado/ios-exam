@@ -28,7 +28,6 @@ class PersonListVC: UIViewController {
         backButton.title = title
         navigationItem.backBarButtonItem = backButton
         
-        viewModel.fetchPersons()
         viewModel.reloadData = {
             DispatchQueue.main.async { [weak self] in
                 if let persons = self?.viewModel.persons {
@@ -36,6 +35,7 @@ class PersonListVC: UIViewController {
                 }
             }
         }
+        viewModel.fetchPersons()
         
         view = contentView
     }
