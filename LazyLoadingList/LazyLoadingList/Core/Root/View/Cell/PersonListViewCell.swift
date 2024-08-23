@@ -32,7 +32,7 @@ class PersonListViewCell: BaseUITableViewCell {
     }()
     
     private lazy var avatarImg: UIImageView = {
-        let view = UIImageView(image: UIImage(named: "avatar_placeholder"))
+        let view = UIImageView()
         return view
     }()
     
@@ -74,6 +74,7 @@ class PersonListViewCell: BaseUITableViewCell {
     
     func configCell(data: Person) {
         // load avatar Img
+        avatarImg.loadImageUsingCache(withUrl: data.picture.large, placeholderImage: UIImage(named: "avatar_placeholder"))
         fullnameLbl.text = "\(data.name.first) \(data.name.last)"
         emailLbl.text = data.email
         phoneLbl.text = data.phone

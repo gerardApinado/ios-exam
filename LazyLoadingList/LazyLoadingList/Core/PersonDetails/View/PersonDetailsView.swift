@@ -17,7 +17,7 @@ class PersonDetailsView: BaseUIView {
     }()
     
     private lazy var avatarImg: UIImageView = {
-        let img = UIImageView(image: UIImage(named: "avatar_placeholder"))
+        let img = UIImageView()
         img.layer.borderWidth = 5
         img.layer.borderColor = UIColor.white.cgColor
         return img
@@ -159,7 +159,7 @@ class PersonDetailsView: BaseUIView {
     
     func configDetails(data: Person){
         // load avatar img from cache or api
-        
+        avatarImg.loadImageUsingCache(withUrl: data.picture.large, placeholderImage: UIImage(named: "avatar_placeholder"))
         fullNameLbl.text        = "\(data.name.first) \(data.name.last)"
         firstName.data          = data.name.first
         lastName.data           = data.name.last
@@ -172,7 +172,6 @@ class PersonDetailsView: BaseUIView {
     }
     
     private func dateStringToDate(_ dateString: String) -> String {
-        // Step 1: Parse the date string
         let isoDateFormatter = DateFormatter()
         isoDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         isoDateFormatter.timeZone = TimeZone(abbreviation: "UTC")
@@ -182,11 +181,10 @@ class PersonDetailsView: BaseUIView {
             return ""
         }
 
-        // Step 2: Format the date to date-only format
         let dateOnlyFormatter = DateFormatter()
-        dateOnlyFormatter.dateStyle = .medium // You can use .short or .long depending on your preference
+        dateOnlyFormatter.dateStyle = .medium
         dateOnlyFormatter.timeStyle = .none
-        dateOnlyFormatter.timeZone = TimeZone.current // Use current time zone or UTC as needed
+        dateOnlyFormatter.timeZone = TimeZone.current
 
         let dateOnlyString = dateOnlyFormatter.string(from: date)
         return dateOnlyString
