@@ -12,7 +12,7 @@ struct Constants {
         struct Person {
             static let getNumberOfPersons = "https://randomuser.me/api/?results=%d"
             static let getRandomContactPersons = "https://randomuser.me/api/?results=%d&inc=name,phone"
-            static let getMorePersons = "https://randomuser.me/api/?page=%d&results=%d&seed=abc"
+            static let getMorePersons = "https://randomuser.me/api/?page=%d&results=%d&seed=%@"
         }
     }
     

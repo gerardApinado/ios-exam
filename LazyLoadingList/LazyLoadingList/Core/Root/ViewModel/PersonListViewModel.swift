@@ -25,16 +25,27 @@ class PersonListViewModel {
                 self?.savePersonToUserDefaults(person: data)
                 self?.persons = self?.loadPersonFromUserDefaults()
                 self?.reloadData?()
-            case .failure(let failure):
+            case .failure(_):
                 print("DEBUG: Error fetching persons complete details")
             }
         }
     }
     
-    func loadMorePersons() {
-//        PersonService.shared.loadMorePersons {
-//            print("DEBUG: load more 10 persons")
-//        }
+    func loadMorePersons(completion: @escaping () -> Void) {
+        // add local loading
+        
+        // remote loading
+        PersonService.shared.loadMoreCompletePersonsDetails(results: 10) { [weak self] result in
+            switch result {
+            case .success(let data):
+                self?.appendPersonsToUserDefaults(newPersons: data)
+                self?.persons = self?.loadPersonFromUserDefaults()
+                self?.reloadData?()
+                completion()
+            case .failure(_):
+                print("DEBUG: Error fetching more persons complete details")
+            }
+        }
     }
     
     func refreshPersons() {
@@ -42,6 +53,8 @@ class PersonListViewModel {
             return
         }
         UserDefaults.standard.removeObject(forKey: Constants.Defaults.personsDefaultKey)
+        UserDefaults.standard.removeObject(forKey: Constants.Defaults.personsSeedDefaultKey)
+        UserDefaults.standard.removeObject(forKey: Constants.Defaults.personsPageDefaultKey)
         
         PersonService.shared.fetchCompletePersonsDetails(results: 30) { [weak self] result in
             switch result {
@@ -49,7 +62,7 @@ class PersonListViewModel {
                 self?.savePersonToUserDefaults(person: data)
                 self?.persons = self?.loadPersonFromUserDefaults()
                 self?.reloadData?()
-            case .failure(let failure):
+            case .failure(_):
                 print("DEBUG: Error fetching persons complete details")
             }
         }
@@ -63,6 +76,12 @@ class PersonListViewModel {
         } catch {
             print("Failed to encode person: \(error)")
         }
+    }
+    
+    private func appendPersonsToUserDefaults(newPersons: [Person]) {
+        guard var persons = self.loadPersonFromUserDefaults() else { return }
+        persons.append(contentsOf: newPersons)
+        self.savePersonToUserDefaults(person: persons)
     }
     
     private func loadPersonFromUserDefaults() -> [Person]? {

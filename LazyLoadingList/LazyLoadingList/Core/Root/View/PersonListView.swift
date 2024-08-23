@@ -76,13 +76,11 @@ extension PersonListView: UITableViewDelegate, UITableViewDataSource {
 
 extension PersonListView: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        let rowHeight = self.table.frame.size.height/10
         let tableHeight = table.bounds.size.height
         let contentHeight = table.contentSize.height
         let contentOffsetY = scrollView.contentOffset.y
         
-        if(contentOffsetY+tableHeight >= contentHeight){
-            // Load only once
+        if(contentOffsetY+tableHeight > contentHeight &&  contentHeight > 0){
             if !isFetchingMoreData {
                 self.isFetchingMoreData = true
                 delegate?.willLoadMorePersons(self) { [weak self] in

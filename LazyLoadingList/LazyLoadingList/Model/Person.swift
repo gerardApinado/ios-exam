@@ -49,8 +49,14 @@ struct Person : Codable {
     var contactPerson: ContactPerson?
 }
 
+struct Info: Codable {
+    let seed : String
+    let page : Int
+}
+
 struct PersonAPIResponse: Codable {
     let results: [Person]
+    let info: Info
 }
 
 struct ContactPersonAPIResponse: Codable {
