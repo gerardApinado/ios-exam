@@ -12,7 +12,7 @@ class PersonListViewModel {
     var persons: [Person]?
 
     func fetchPersons() {
-        PersonService.shared.fetchPersons {
+        PersonService.shared.fetchPersons(results: 1) { res in
             print("DEBUG: Fetch 30 persons")
         }
     }

@@ -16,6 +16,8 @@
 		D523E9F32C78236F00F9D48C /* PersonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D523E9F22C78236F00F9D48C /* PersonService.swift */; };
 		D523E9F52C7825FC00F9D48C /* PersonListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D523E9F42C7825FC00F9D48C /* PersonListViewModel.swift */; };
 		D523E9F82C78283F00F9D48C /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D523E9F72C78283F00F9D48C /* AppCoordinator.swift */; };
+		D523E9FA2C782D4200F9D48C /* APIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D523E9F92C782D4200F9D48C /* APIConstants.swift */; };
+		D523E9FD2C78306800F9D48C /* APError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D523E9FC2C78306800F9D48C /* APError.swift */; };
 		D5EB2BEA2C77135800FDBC17 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5EB2BE92C77135800FDBC17 /* Person.swift */; };
 		D5EB2BEE2C7715E200FDBC17 /* PersonListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5EB2BED2C7715E200FDBC17 /* PersonListView.swift */; };
 		D5EB2BF22C77171D00FDBC17 /* PersonListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5EB2BF12C77171D00FDBC17 /* PersonListViewCell.swift */; };
@@ -38,6 +40,8 @@
 		D523E9F22C78236F00F9D48C /* PersonService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonService.swift; sourceTree = "<group>"; };
 		D523E9F42C7825FC00F9D48C /* PersonListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonListViewModel.swift; sourceTree = "<group>"; };
 		D523E9F72C78283F00F9D48C /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		D523E9F92C782D4200F9D48C /* APIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConstants.swift; sourceTree = "<group>"; };
+		D523E9FC2C78306800F9D48C /* APError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APError.swift; sourceTree = "<group>"; };
 		D5EB2BE92C77135800FDBC17 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		D5EB2BED2C7715E200FDBC17 /* PersonListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonListView.swift; sourceTree = "<group>"; };
 		D5EB2BF12C77171D00FDBC17 /* PersonListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonListViewCell.swift; sourceTree = "<group>"; };
@@ -111,6 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				D523E9F22C78236F00F9D48C /* PersonService.swift */,
+				D523E9F92C782D4200F9D48C /* APIConstants.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -121,6 +126,14 @@
 				D523E9F72C78283F00F9D48C /* AppCoordinator.swift */,
 			);
 			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		D523E9FB2C78304700F9D48C /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				D523E9FC2C78306800F9D48C /* APError.swift */,
+			);
+			path = Util;
 			sourceTree = "<group>";
 		};
 		D5EB2BE52C77120000FDBC17 /* App */ = {
@@ -219,6 +232,7 @@
 				D523E9F12C78230600F9D48C /* Service */,
 				D5EB2BE82C77134500FDBC17 /* Model */,
 				D5EB2BE62C7712A500FDBC17 /* Core */,
+				D523E9FB2C78304700F9D48C /* Util */,
 				D5EB2BEF2C77161E00FDBC17 /* Extensions */,
 				D52302852C773981003B5989 /* BaseFiles */,
 				D5F0ACB92C770E45000E087C /* Assets.xcassets */,
@@ -336,9 +350,11 @@
 				D5EB2BF22C77171D00FDBC17 /* PersonListViewCell.swift in Sources */,
 				D523027C2C772D9A003B5989 /* PersonDetailsView.swift in Sources */,
 				D523E9F32C78236F00F9D48C /* PersonService.swift in Sources */,
+				D523E9FA2C782D4200F9D48C /* APIConstants.swift in Sources */,
 				D52302892C773DCF003B5989 /* SingleDetailView.swift in Sources */,
 				D52302822C773628003B5989 /* UIColor+Extension.swift in Sources */,
 				D5F0ACB12C770E44000E087C /* AppDelegate.swift in Sources */,
+				D523E9FD2C78306800F9D48C /* APError.swift in Sources */,
 				D52302872C7739F0003B5989 /* BaseUIView.swift in Sources */,
 				D5EB2BEA2C77135800FDBC17 /* Person.swift in Sources */,
 				D523E9F52C7825FC00F9D48C /* PersonListViewModel.swift in Sources */,
