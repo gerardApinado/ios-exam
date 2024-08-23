@@ -10,6 +10,9 @@ import SnapKit
 
 class PersonListVC: UIViewController {
     
+    var coordinator : AppCoordinator?
+    private var viewModel = PersonListViewModel()
+    
     private lazy var contentView: PersonListView = {
         let view = PersonListView()
         view.delegate = self
@@ -21,10 +24,11 @@ class PersonListVC: UIViewController {
         // Do any additional setup after loading the view.
         
         title = "Persons List"
-        
         let backButton = UIBarButtonItem()
         backButton.title = title
         navigationItem.backBarButtonItem = backButton
+        
+        viewModel.fetchPersons()
         
         view = contentView
     }
@@ -34,8 +38,7 @@ class PersonListVC: UIViewController {
 extension PersonListVC: PersonListViewDelegate {
     // must handled by the coordinator - MVVMC
     func didTapPerson(_ view: PersonListView) {
-        let nextViewController = PersonDetailsVC()
-        navigationController?.pushViewController(nextViewController, animated: true)
+        coordinator?.routeToPersonDetails()
     }
 }
 

@@ -13,6 +13,9 @@
 		D52302822C773628003B5989 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52302812C773628003B5989 /* UIColor+Extension.swift */; };
 		D52302872C7739F0003B5989 /* BaseUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52302862C7739F0003B5989 /* BaseUIView.swift */; };
 		D52302892C773DCF003B5989 /* SingleDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52302882C773DCF003B5989 /* SingleDetailView.swift */; };
+		D523E9F32C78236F00F9D48C /* PersonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D523E9F22C78236F00F9D48C /* PersonService.swift */; };
+		D523E9F52C7825FC00F9D48C /* PersonListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D523E9F42C7825FC00F9D48C /* PersonListViewModel.swift */; };
+		D523E9F82C78283F00F9D48C /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D523E9F72C78283F00F9D48C /* AppCoordinator.swift */; };
 		D5EB2BEA2C77135800FDBC17 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5EB2BE92C77135800FDBC17 /* Person.swift */; };
 		D5EB2BEE2C7715E200FDBC17 /* PersonListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5EB2BED2C7715E200FDBC17 /* PersonListView.swift */; };
 		D5EB2BF22C77171D00FDBC17 /* PersonListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5EB2BF12C77171D00FDBC17 /* PersonListViewCell.swift */; };
@@ -32,6 +35,9 @@
 		D52302812C773628003B5989 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		D52302862C7739F0003B5989 /* BaseUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseUIView.swift; sourceTree = "<group>"; };
 		D52302882C773DCF003B5989 /* SingleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleDetailView.swift; sourceTree = "<group>"; };
+		D523E9F22C78236F00F9D48C /* PersonService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonService.swift; sourceTree = "<group>"; };
+		D523E9F42C7825FC00F9D48C /* PersonListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonListViewModel.swift; sourceTree = "<group>"; };
+		D523E9F72C78283F00F9D48C /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		D5EB2BE92C77135800FDBC17 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		D5EB2BED2C7715E200FDBC17 /* PersonListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonListView.swift; sourceTree = "<group>"; };
 		D5EB2BF12C77171D00FDBC17 /* PersonListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonListViewCell.swift; sourceTree = "<group>"; };
@@ -101,6 +107,22 @@
 			path = BaseFiles;
 			sourceTree = "<group>";
 		};
+		D523E9F12C78230600F9D48C /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				D523E9F22C78236F00F9D48C /* PersonService.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		D523E9F62C78281800F9D48C /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				D523E9F72C78283F00F9D48C /* AppCoordinator.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
 		D5EB2BE52C77120000FDBC17 /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -150,6 +172,7 @@
 		D5EB2BEC2C7715A400FDBC17 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				D523E9F42C7825FC00F9D48C /* PersonListViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -192,10 +215,12 @@
 			isa = PBXGroup;
 			children = (
 				D5EB2BE52C77120000FDBC17 /* App */,
-				D52302852C773981003B5989 /* BaseFiles */,
-				D5EB2BEF2C77161E00FDBC17 /* Extensions */,
+				D523E9F62C78281800F9D48C /* Coordinator */,
+				D523E9F12C78230600F9D48C /* Service */,
 				D5EB2BE82C77134500FDBC17 /* Model */,
 				D5EB2BE62C7712A500FDBC17 /* Core */,
+				D5EB2BEF2C77161E00FDBC17 /* Extensions */,
+				D52302852C773981003B5989 /* BaseFiles */,
 				D5F0ACB92C770E45000E087C /* Assets.xcassets */,
 				D5F0ACBE2C770E45000E087C /* Info.plist */,
 			);
@@ -310,13 +335,16 @@
 				D5F0ACB52C770E44000E087C /* PersonListVC.swift in Sources */,
 				D5EB2BF22C77171D00FDBC17 /* PersonListViewCell.swift in Sources */,
 				D523027C2C772D9A003B5989 /* PersonDetailsView.swift in Sources */,
+				D523E9F32C78236F00F9D48C /* PersonService.swift in Sources */,
 				D52302892C773DCF003B5989 /* SingleDetailView.swift in Sources */,
 				D52302822C773628003B5989 /* UIColor+Extension.swift in Sources */,
 				D5F0ACB12C770E44000E087C /* AppDelegate.swift in Sources */,
 				D52302872C7739F0003B5989 /* BaseUIView.swift in Sources */,
 				D5EB2BEA2C77135800FDBC17 /* Person.swift in Sources */,
+				D523E9F52C7825FC00F9D48C /* PersonListViewModel.swift in Sources */,
 				F9BD33802C77813C0001F363 /* BaseUITableViewCell.swift in Sources */,
 				D5F0ACB32C770E44000E087C /* SceneDelegate.swift in Sources */,
+				D523E9F82C78283F00F9D48C /* AppCoordinator.swift in Sources */,
 				D5EB2BEE2C7715E200FDBC17 /* PersonListView.swift in Sources */,
 				D52302792C772D70003B5989 /* PersonDetailsVC.swift in Sources */,
 			);
