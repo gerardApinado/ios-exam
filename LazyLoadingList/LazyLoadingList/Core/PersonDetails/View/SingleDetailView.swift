@@ -50,13 +50,14 @@ class SingleDetailView: BaseUIView {
         addSubview(titleLbl)
         titleLbl.snp.makeConstraints { make in
             make.bottom.equalTo(bgView.snp.top).offset(-2)
-            make.left.equalToSuperview()
+            make.left.right.equalToSuperview()
         }
         
         bgView.addSubview(dataLbl)
         dataLbl.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.left.equalToSuperview().offset(7)
+            make.right.equalToSuperview().offset(-1)
         }
     }
 }

@@ -26,6 +26,8 @@ class PersonDetailsView: BaseUIView {
     private lazy var fullNameLbl: UILabel = {
         let lbl = UILabel()
         lbl.font = .systemFont(ofSize: 22, weight: .bold)
+        lbl.textAlignment = .center
+        lbl.adjustsFontSizeToFitWidth = true
         return lbl
     }()
     
@@ -86,7 +88,6 @@ class PersonDetailsView: BaseUIView {
         addSubview(avatarImg)
         avatarImg.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-//            make.top.equalToSuperview().offset(155)
             make.centerY.equalTo(topBgView.snp.bottom)
             make.width.equalToSuperview().multipliedBy(0.3)
             make.height.equalTo(avatarImg.snp.width)
@@ -96,6 +97,7 @@ class PersonDetailsView: BaseUIView {
         fullNameLbl.snp.makeConstraints { make in
             make.top.equalTo(avatarImg.snp.bottom).offset(16)
             make.centerX.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(0.9)
         }
         
         let configureConstraints: (ConstraintMaker) -> Void = { make in
@@ -158,13 +160,12 @@ class PersonDetailsView: BaseUIView {
     }
     
     func configDetails(data: Person){
-        // load avatar img from cache or api
         avatarImg.loadImageUsingCache(withUrl: data.picture.large, placeholderImage: UIImage(named: "avatar_placeholder"))
         fullNameLbl.text        = "\(data.name.first) \(data.name.last)"
         firstName.data          = data.name.first
         lastName.data           = data.name.last
         birthdate.data          = dateStringToDate(data.dob.date)
-        age.data                = "\(data.dob.age)" // must be derived from brithdate
+        age.data                = "\(data.dob.age)"
         email.data              = data.email
         phone.data              = data.phone
         contactPerson.data      = "\(data.contactPerson?.name?.first ?? "") \(data.contactPerson?.name?.last ?? "")"

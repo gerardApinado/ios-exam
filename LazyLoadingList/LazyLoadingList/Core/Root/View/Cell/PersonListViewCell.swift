@@ -12,22 +12,22 @@ class PersonListViewCell: BaseUITableViewCell {
     
     private lazy var phoneLbl: UILabel = {
         let lbl = UILabel()
-        lbl.text = "+1234567890"
         lbl.font = .systemFont(ofSize: 16)
+        lbl.adjustsFontSizeToFitWidth = true
         return lbl
     }()
     
     private lazy var emailLbl: UILabel = {
         let lbl = UILabel()
-        lbl.text = "max@email.com"
         lbl.font = .systemFont(ofSize: 16)
+        lbl.adjustsFontSizeToFitWidth = true
         return lbl
     }()
     
     private lazy var fullnameLbl: UILabel = {
         let lbl = UILabel()
-        lbl.text = "Max Vestappen"
         lbl.font = .systemFont(ofSize: 18, weight: .semibold)
+        lbl.adjustsFontSizeToFitWidth = true
         return lbl
     }()
     
@@ -57,18 +57,21 @@ class PersonListViewCell: BaseUITableViewCell {
         fullnameLbl.snp.makeConstraints { make in
             make.left.equalTo(avatarImg.snp.right).offset(10)
             make.top.equalTo(avatarImg)
+            make.right.equalToSuperview().offset(-1)
         }
         
         addSubview(emailLbl)
         emailLbl.snp.makeConstraints { make in
             make.left.equalTo(fullnameLbl)
             make.top.equalTo(fullnameLbl.snp.bottom)
+            make.right.equalToSuperview().offset(-1)
         }
         
         addSubview(phoneLbl)
         phoneLbl.snp.makeConstraints { make in
-            make.left.equalTo(fullnameLbl)
+            make.left.equalTo(emailLbl)
             make.top.equalTo(emailLbl.snp.bottom)
+            make.right.equalToSuperview().offset(-1)
         }
     }
     
