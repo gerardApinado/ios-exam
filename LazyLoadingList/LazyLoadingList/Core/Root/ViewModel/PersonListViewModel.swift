@@ -10,10 +10,16 @@ import Foundation
 class PersonListViewModel {
     
     var persons: [Person]?
+    
 
     func fetchPersons() {
-        PersonService.shared.fetchPersons(results: 1) { res in
-            print("DEBUG: Fetch 30 persons")
+        PersonService.shared.fetchCompletePersonsDetails(results: 10) { result in
+            switch result {
+            case .success(let data):
+                print("DEBUG: save remote data to local")
+            case .failure(let failure):
+                print("DEBUG: Error fetching persons complete details")
+            }
         }
     }
     

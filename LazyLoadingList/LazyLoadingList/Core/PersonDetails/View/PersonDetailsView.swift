@@ -160,14 +160,35 @@ class PersonDetailsView: BaseUIView {
     func configDetails(data: Person){
         // load avatar img from cache or api
         
-        fullNameLbl.text        = "\(data.firstName) \(data.lastName)"
-        firstName.data          = data.firstName
-        lastName.data           = data.lastName
-        birthdate.data          = data.birthday
-        age.data                = "\(data.age)" // must be derived from brithdate
+        fullNameLbl.text        = "\(data.name.first) \(data.name.last)"
+        firstName.data          = data.name.first
+        lastName.data           = data.name.last
+        birthdate.data          = dateStringToDate(data.dob.date)
+        age.data                = "\(data.dob.age)" // must be derived from brithdate
         email.data              = data.email
         phone.data              = data.phone
-        contactPerson.data      = data.contactPerson
-        contactPersonPhone.data = data.contactPersonPhone
+        contactPerson.data      = "\(data.contactPerson?.name?.first ?? "") \(data.contactPerson?.name?.last ?? "")"
+        contactPersonPhone.data = data.contactPerson?.phone
+    }
+    
+    private func dateStringToDate(_ dateString: String) -> String {
+        // Step 1: Parse the date string
+        let isoDateFormatter = DateFormatter()
+        isoDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        isoDateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+
+        guard let date = isoDateFormatter.date(from: dateString) else {
+            print("Failed to parse date")
+            return ""
+        }
+
+        // Step 2: Format the date to date-only format
+        let dateOnlyFormatter = DateFormatter()
+        dateOnlyFormatter.dateStyle = .medium // You can use .short or .long depending on your preference
+        dateOnlyFormatter.timeStyle = .none
+        dateOnlyFormatter.timeZone = TimeZone.current // Use current time zone or UTC as needed
+
+        let dateOnlyString = dateOnlyFormatter.string(from: date)
+        return dateOnlyString
     }
 }

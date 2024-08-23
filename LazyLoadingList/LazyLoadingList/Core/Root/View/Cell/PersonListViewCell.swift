@@ -74,7 +74,7 @@ class PersonListViewCell: BaseUITableViewCell {
     
     func configCell(data: Person) {
         // load avatar Img
-        fullnameLbl.text = "\(data.firstName) \(data.lastName)"
+        fullnameLbl.text = "\(data.name.first) \(data.name.last)"
         emailLbl.text = data.email
         phoneLbl.text = data.phone
     }

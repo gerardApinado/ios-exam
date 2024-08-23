@@ -9,25 +9,72 @@ import Foundation
 import UIKit
 
 struct Person : Codable {
-    let firstName: String
-    let lastName: String
-    let birthday: String
-    let age: Int
+    struct Name: Codable {
+        let first: String
+        let last: String
+    }
+        
+    struct Location: Codable {
+        struct Street: Codable {
+            let number: Int
+            let name: String
+        }
+        let street: Street
+        let city: String
+        let state: String
+        let country: String
+    }
+    
+    struct Picture: Codable {
+        let large: String
+    }
+    
+    struct Dob: Codable {
+        let date: String
+        let age: Int
+    }
+    
+    struct ContactPerson: Codable {
+        let name: Name?
+        let phone: String?
+    }
+    
+    let name: Name
+    let location: Location
     let email: String
     let phone: String
-    let address: String
-    let contactPerson: String
-    let contactPersonPhone: String
+    let dob: Dob
+    let picture: Picture
+    
+    var contactPerson: ContactPerson?
 }
 
-class SamplePersonDetails {
-    static let singlePerson = Person(firstName: "Max",
-                              lastName: "Verstappen",
-                              birthday: "1998-09-08",
-                              age: 24,
-                              email: "email@emial.com",
-                              phone: "+1234567890",
-                              address: "Tondo, Manila",
-                              contactPerson: "Mary Loi",
-                              contactPersonPhone: "+1234567890")
+struct PersonAPIResponse: Codable {
+    let results: [Person]
+}
+
+struct ContactPersonAPIResponse: Codable {
+    let results: [Person.ContactPerson]
+}
+
+struct PersonMockData {
+    static let singlePerson = Person(
+        name: Person.Name(first: "Max", last: "Verstappen"),
+        location: Person.Location(
+            street: Person.Location.Street(number: 99, name: "Gil Tulog"),
+            city: "Pasay City",
+            state: "Metro Manila",
+            country: "Philippines"),
+        email: "email@email.com",
+        phone: "+1234567890",
+        dob: Person.Dob(
+            date: "2000-09-08T11:47:11.796Z",
+            age: 50),
+        picture: Person.Picture(large: "https://randomuser.me/api/portraits/men/61.jpg"),
+        contactPerson: Person.ContactPerson(
+            name: Person.Name(first: "Mary Loi", last: "Yves"),
+            phone: "+0987654321")
+//        contactPerson: Person.Name(first: "Mary Loi", last: "Yves"),
+//        contactPersonPhone: "+0987654321"
+    )
 }

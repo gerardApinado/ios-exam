@@ -20,7 +20,7 @@ class PersonDetailsVC: UIViewController {
         title = "Details"
         
         view = contentView
-        contentView.configDetails(data: SamplePersonDetails.singlePerson)
+        contentView.configDetails(data: PersonMockData.singlePerson)
     }
 
 }
