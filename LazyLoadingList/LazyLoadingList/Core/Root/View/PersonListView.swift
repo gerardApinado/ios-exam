@@ -9,12 +9,14 @@ import UIKit
 
 protocol PersonListViewDelegate: AnyObject {
     func didTapPerson(_ view:PersonListView, data: Person)
+    func didRefreshTable(_ view:PersonListView)
 }
 
 class PersonListView: BaseUIView {
     
     weak var delegate: PersonListViewDelegate?
     private var persons : [Person] = []
+    let refreshControl = UIRefreshControl()
     
     private lazy var table: UITableView = {
         let tbl = UITableView()
@@ -22,6 +24,10 @@ class PersonListView: BaseUIView {
         tbl.delegate = self
         tbl.dataSource = self
         tbl.separatorStyle = .none
+        
+        refreshControl.addTarget(self, action: #selector(didRefreshTable), for: .valueChanged)
+        tbl.refreshControl = refreshControl
+        
         return tbl
     }()
 
@@ -35,6 +41,12 @@ class PersonListView: BaseUIView {
     func configPersonList(data: [Person]){
         persons = data
         table.reloadData()
+    }
+}
+
+extension PersonListView {
+    @objc func didRefreshTable(){
+        delegate?.didRefreshTable(self)
     }
 }
 

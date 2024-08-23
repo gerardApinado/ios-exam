@@ -43,6 +43,19 @@ class PersonListVC: UIViewController {
 }
 
 extension PersonListVC: PersonListViewDelegate {
+    func didRefreshTable(_ view: PersonListView) {
+        viewModel.refreshPersons()
+        viewModel.reloadData = {
+            DispatchQueue.main.async { [weak self] in
+                if let persons = self?.viewModel.persons {
+                    self?.contentView.configPersonList(data: persons)
+                }
+            }
+        }
+        
+        contentView.refreshControl.endRefreshing()
+    }
+    
     func didTapPerson(_ view: PersonListView, data: Person) {
         coordinator?.routeToPersonDetails(data: data)
     }

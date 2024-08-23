@@ -12,7 +12,7 @@ class PersonListViewModel {
     var persons: [Person]?
     var reloadData: (() -> Void)?
 
-    func fetchPersons() {
+    func fetchPersons() {        
         PersonService.shared.fetchCompletePersonsDetails(results: 30) { [weak self] result in
             switch result {
             case .success(let data):
@@ -31,6 +31,24 @@ class PersonListViewModel {
         }
     }
     
+    func refreshPersons() {
+        if UserDefaults.standard.data(forKey: Constants.Defaults.personsDefaultKey) == nil {
+            return
+        }
+        UserDefaults.standard.removeObject(forKey: Constants.Defaults.personsDefaultKey)
+        
+        PersonService.shared.fetchCompletePersonsDetails(results: 30) { [weak self] result in
+            switch result {
+            case .success(let data):
+                self?.savePersonToUserDefaults(person: data)
+                self?.persons = self?.loadPersonFromUserDefaults()
+                self?.reloadData?()
+            case .failure(let failure):
+                print("DEBUG: Error fetching persons complete details")
+            }
+        }
+    }
+    
     private func savePersonToUserDefaults(person: [Person]) {
         let encoder = JSONEncoder()
         do {
@@ -41,7 +59,7 @@ class PersonListViewModel {
         }
     }
     
-    func loadPersonFromUserDefaults() -> [Person]? {
+    private func loadPersonFromUserDefaults() -> [Person]? {
         if let data = UserDefaults.standard.data(forKey: Constants.Defaults.personsDefaultKey) {
             let decoder = JSONDecoder()
             do {
