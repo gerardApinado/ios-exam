@@ -10,6 +10,7 @@ import UIKit
 protocol PersonListViewDelegate: AnyObject {
     func didTapPerson(_ view:PersonListView, data: Person)
     func didRefreshTable(_ view:PersonListView)
+    func willLoadMorePersons(_ view: PersonListView, completion: @escaping () -> Void)
 }
 
 class PersonListView: BaseUIView {
@@ -17,6 +18,7 @@ class PersonListView: BaseUIView {
     weak var delegate: PersonListViewDelegate?
     private var persons : [Person] = []
     let refreshControl = UIRefreshControl()
+    var isFetchingMoreData: Bool = false
     
     private lazy var table: UITableView = {
         let tbl = UITableView()
@@ -81,7 +83,12 @@ extension PersonListView: UIScrollViewDelegate {
         
         if(contentOffsetY+tableHeight >= contentHeight){
             // Load only once
-            print("DEBUG: Load More Person")
+            if !isFetchingMoreData {
+                self.isFetchingMoreData = true
+                delegate?.willLoadMorePersons(self) { [weak self] in
+                    self?.isFetchingMoreData = false
+                }
+            }
         }
     }
 }

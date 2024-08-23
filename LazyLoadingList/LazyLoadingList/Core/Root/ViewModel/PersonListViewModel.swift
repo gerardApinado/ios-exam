@@ -26,9 +26,9 @@ class PersonListViewModel {
     }
     
     func loadMorePersons() {
-        PersonService.shared.loadMorePersons {
-            print("DEBUG: load more 10 persons")
-        }
+//        PersonService.shared.loadMorePersons {
+//            print("DEBUG: load more 10 persons")
+//        }
     }
     
     func refreshPersons() {
