@@ -46,6 +46,7 @@
 		D523E9FC2C78306800F9D48C /* APError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APError.swift; sourceTree = "<group>"; };
 		D55E0BD92C7892F2004E321D /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		D55E0BDC2C797096004E321D /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
+		D55E0BDE2C799070004E321D /* Documentation.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Documentation.md; sourceTree = "<group>"; };
 		D5EB2BE92C77135800FDBC17 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		D5EB2BED2C7715E200FDBC17 /* PersonListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonListView.swift; sourceTree = "<group>"; };
 		D5EB2BF12C77171D00FDBC17 /* PersonListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonListViewCell.swift; sourceTree = "<group>"; };
@@ -222,6 +223,7 @@
 		D5F0ACA42C770E44000E087C = {
 			isa = PBXGroup;
 			children = (
+				D55E0BDE2C799070004E321D /* Documentation.md */,
 				D5F0ACAF2C770E44000E087C /* LazyLoadingList */,
 				D5F0ACAE2C770E44000E087C /* Products */,
 				E0C5EDDCDFA7727CF9DD1337 /* Pods */,
