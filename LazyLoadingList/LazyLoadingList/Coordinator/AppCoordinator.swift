@@ -31,5 +31,7 @@ class AppCoordinator {
         navigationController.pushViewController(personDetailsVC, animated: true)
     }
     
-    
+    func popCurrentViewController() {
+        navigationController.popViewController(animated: true)
+    }
 }

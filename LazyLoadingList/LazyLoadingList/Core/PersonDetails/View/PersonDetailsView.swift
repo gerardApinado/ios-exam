@@ -8,7 +8,13 @@
 import UIKit
 import SnapKit
 
+protocol PersonDetailsViewDelegate: AnyObject {
+    func didTapAvatar(_ view: PersonDetailsView)
+}
+
 class PersonDetailsView: BaseUIView {
+    
+    weak var delegate : PersonDetailsViewDelegate?
     
     private lazy var topBgView: UIView = {
         let view = UIView()
@@ -20,6 +26,10 @@ class PersonDetailsView: BaseUIView {
         let img = UIImageView()
         img.layer.borderWidth = 5
         img.layer.borderColor = UIColor.white.cgColor
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAvatar))
+        img.isUserInteractionEnabled = true
+        img.addGestureRecognizer(tapGesture)
         return img
     }()
     
@@ -236,5 +246,11 @@ class PersonDetailsView: BaseUIView {
 
         let dateOnlyString = dateOnlyFormatter.string(from: date)
         return dateOnlyString
+    }
+}
+
+extension PersonDetailsView {
+    @objc func didTapAvatar() {
+        delegate?.didTapAvatar(self)
     }
 }

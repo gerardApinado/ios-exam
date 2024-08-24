@@ -11,6 +11,7 @@ class PersonDetailsVC: UIViewController {
     
     private lazy var contentView: PersonDetailsView = {
         let view = PersonDetailsView()
+        view.delegate = self
         return view
     }()
     
@@ -29,7 +30,12 @@ class PersonDetailsVC: UIViewController {
         title = "Details"
         
         view = contentView
-//        contentView.configDetails(data: PersonMockData.singlePerson)
     }
 
+}
+
+extension PersonDetailsVC: PersonDetailsViewDelegate {
+    func didTapAvatar(_ view: PersonDetailsView) {
+        self.navigationController?.popViewController(animated: true)
+    }
 }
