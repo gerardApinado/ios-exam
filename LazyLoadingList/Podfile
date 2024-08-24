@@ -7,5 +7,7 @@ target 'LazyLoadingList' do
 
   # Pods for LazyLoadingList
   pod 'SnapKit', '~> 5.6.0'
+  pod 'RxSwift'
+  pod 'RxCocoa'
 
 end
