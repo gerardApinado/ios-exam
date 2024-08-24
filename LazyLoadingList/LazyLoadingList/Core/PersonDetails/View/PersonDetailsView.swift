@@ -71,6 +71,18 @@ class PersonDetailsView: BaseUIView {
         return view
     }()
     
+    private lazy var scrollView: UIScrollView = {
+        let scroll = UIScrollView()
+        scroll.bounces = false
+        scroll.showsVerticalScrollIndicator = false
+        return scroll
+    }()
+    
+    private lazy var detailsView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         avatarImg.layer.cornerRadius = avatarImg.frame.size.height / 2
@@ -95,9 +107,25 @@ class PersonDetailsView: BaseUIView {
         
         addSubview(fullNameLbl)
         fullNameLbl.snp.makeConstraints { make in
-            make.top.equalTo(avatarImg.snp.bottom).offset(16)
+            let offset = Constants.Screen.isIPProSize ? 16 : 0
+            make.top.equalTo(avatarImg.snp.bottom).offset(offset)
             make.centerX.equalToSuperview()
             make.width.equalToSuperview().multipliedBy(0.9)
+        }
+        
+        addSubview(scrollView)
+        scrollView.snp.makeConstraints { make in
+            let offset = Constants.Screen.isIPProSize ? 24 : 12
+            make.top.equalTo(fullNameLbl.snp.bottom).offset(offset)
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(safeAreaLayoutGuide)
+            make.width.equalToSuperview()
+        }
+        
+        scrollView.addSubview(detailsView)
+        detailsView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.width.equalToSuperview()
         }
         
         let configureConstraints: (ConstraintMaker) -> Void = { make in
@@ -106,19 +134,19 @@ class PersonDetailsView: BaseUIView {
             make.height.equalTo(50)
         }
         
-        addSubview(firstName)
+        detailsView.addSubview(firstName)
         firstName.snp.makeConstraints { make in
-            make.top.equalTo(fullNameLbl.snp.bottom).offset(24)
+            make.top.equalToSuperview()
             configureConstraints(make)
         }
         
-        addSubview(lastName)
+        detailsView.addSubview(lastName)
         lastName.snp.makeConstraints { make in
             make.top.equalTo(firstName.snp.bottom).offset(14)
             configureConstraints(make)
         }
         
-        addSubview(birthdate)
+        detailsView.addSubview(birthdate)
         birthdate.snp.makeConstraints { make in
             make.top.equalTo(lastName.snp.bottom).offset(14)
             make.left.equalTo(lastName)
@@ -126,7 +154,7 @@ class PersonDetailsView: BaseUIView {
             make.height.equalTo(50)
         }
         
-        addSubview(age)
+        detailsView.addSubview(age)
         age.snp.makeConstraints { make in
             make.top.equalTo(lastName.snp.bottom).offset(14)
             make.left.equalTo(birthdate.snp.right).offset(5)
@@ -134,27 +162,28 @@ class PersonDetailsView: BaseUIView {
             make.height.equalTo(50)
         }
         
-        addSubview(email)
+        detailsView.addSubview(email)
         email.snp.makeConstraints { make in
             make.top.equalTo(age.snp.bottom).offset(14)
             configureConstraints(make)
         }
         
-        addSubview(phone)
+        detailsView.addSubview(phone)
         phone.snp.makeConstraints { make in
             make.top.equalTo(email.snp.bottom).offset(14)
             configureConstraints(make)
         }
         
-        addSubview(contactPerson)
+        detailsView.addSubview(contactPerson)
         contactPerson.snp.makeConstraints { make in
             make.top.equalTo(phone.snp.bottom).offset(14)
             configureConstraints(make)
         }
         
-        addSubview(contactPersonPhone)
+        detailsView.addSubview(contactPersonPhone)
         contactPersonPhone.snp.makeConstraints { make in
             make.top.equalTo(contactPerson.snp.bottom).offset(14)
+            make.bottom.equalToSuperview()
             configureConstraints(make)
         }
     }
@@ -165,11 +194,29 @@ class PersonDetailsView: BaseUIView {
         firstName.data          = data.name.first
         lastName.data           = data.name.last
         birthdate.data          = dateStringToDate(data.dob.date)
-        age.data                = "\(data.dob.age)"
+//        age.data                = "\(data.dob.age)"
+        age.data                = "\(ageDerivedFromDate(data.dob.date) ?? 0)"
         email.data              = data.email
         phone.data              = data.phone
         contactPerson.data      = "\(data.contactPerson?.name?.first ?? "") \(data.contactPerson?.name?.last ?? "")"
         contactPersonPhone.data = data.contactPerson?.phone
+    }
+    
+    private func ageDerivedFromDate(_ dateString: String) -> Int? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        
+        guard let date = dateFormatter.date(from: dateString) else {
+            return nil
+        }
+        
+        let calendar = Calendar.current
+        let currentDate = Date()
+        let components = calendar.dateComponents([.year], from: date, to: currentDate)
+        
+        return components.year
     }
     
     private func dateStringToDate(_ dateString: String) -> String {

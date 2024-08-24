@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct Constants {
     struct API {
@@ -20,5 +21,16 @@ struct Constants {
         static let personsDefaultKey = "savedPersons"
         static let personsSeedDefaultKey = "personsSeed"
         static let personsPageDefaultKey = "personsPage"
+    }
+    
+    struct Screen {
+        static let screenWidth = UIScreen.main.bounds.width
+        static let screenHeight = UIScreen.main.bounds.height
+                
+        static let isIPProSize = screenWidth > 375.0
+        
+        static func sacledSizeH(_ value: CGFloat) -> CGFloat {
+            return (((value+15)/812.0)*screenWidth)
+        }
     }
 }

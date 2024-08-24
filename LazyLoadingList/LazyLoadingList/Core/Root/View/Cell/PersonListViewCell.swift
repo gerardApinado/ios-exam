@@ -12,21 +12,21 @@ class PersonListViewCell: BaseUITableViewCell {
     
     private lazy var phoneLbl: UILabel = {
         let lbl = UILabel()
-        lbl.font = .systemFont(ofSize: 16)
+        lbl.font = .systemFont(ofSize: Constants.Screen.sacledSizeH(16))
         lbl.adjustsFontSizeToFitWidth = true
         return lbl
     }()
     
     private lazy var emailLbl: UILabel = {
         let lbl = UILabel()
-        lbl.font = .systemFont(ofSize: 16)
+        lbl.font = .systemFont(ofSize: Constants.Screen.sacledSizeH(16))
         lbl.adjustsFontSizeToFitWidth = true
         return lbl
     }()
     
     private lazy var fullnameLbl: UILabel = {
         let lbl = UILabel()
-        lbl.font = .systemFont(ofSize: 18, weight: .semibold)
+        lbl.font = .systemFont(ofSize: Constants.Screen.sacledSizeH(20), weight: .semibold)
         lbl.adjustsFontSizeToFitWidth = true
         return lbl
     }()

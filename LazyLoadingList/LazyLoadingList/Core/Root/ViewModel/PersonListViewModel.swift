@@ -50,7 +50,6 @@ class PersonListViewModel {
             self.persons = Array(localPersons.prefix(results))
             self.reloadData?()
             UserDefaultsManager.shared.savePersonPage(page: nextPage)
-            print("DEBUG: load local persons: Persons \(self.persons?.count ?? 0)")
             completion()
         } else {
             // remote loading
@@ -60,10 +59,10 @@ class PersonListViewModel {
                     UserDefaultsManager.shared.appendPersonsToUserDefaults(newPersons: data)
                     self?.persons = UserDefaultsManager.shared.loadPersonFromUserDefaults()
                     self?.reloadData?()
-                    print("DEBUG: load remote persons: Persons \(self?.persons?.count ?? 0)")
                     completion()
                 case .failure(_):
                     print("DEBUG: Error fetching more persons complete details")
+                    completion()
                 }
             }
         }
