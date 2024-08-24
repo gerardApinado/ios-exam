@@ -46,12 +46,14 @@ class PersonListView: BaseUIView {
     }
 }
 
+//MARK: action
 extension PersonListView {
     @objc func didRefreshTable(){
         delegate?.didRefreshTable(self)
     }
 }
 
+//MARK: delegate
 extension PersonListView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return persons.count

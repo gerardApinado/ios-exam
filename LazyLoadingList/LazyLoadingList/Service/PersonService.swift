@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class PersonService {
+final class PersonService {
     
     static let shared = PersonService()
     
@@ -19,6 +19,7 @@ class PersonService {
         
     }
     
+    //MARK: public methods
     func fetchCompletePersonsDetails(results: Int, completion: @escaping (Result<[Person], APError>) -> Void) {
          let dispatchGroup = DispatchGroup()
          
@@ -89,6 +90,7 @@ class PersonService {
         }
     }
 
+    //MARK: private methods
     private func combineContactPerson() -> [Person]? {
         if let persons = self.persons,
            let contactPerson = self.contactPerson {
@@ -133,12 +135,9 @@ class PersonService {
             do {
                 // fetch 30 Pesons
                 let persons = try JSONDecoder().decode(PersonAPIResponse.self, from: data)
-                
-                let seed = persons.info.seed
-                UserDefaults.standard.set(seed, forKey: Constants.Defaults.personsSeedDefaultKey)
-                
-                let page = persons.info.page
-                UserDefaults.standard.set(page, forKey: Constants.Defaults.personsPageDefaultKey)
+                                
+                UserDefaultsManager.shared.savePersonSeed(seed: persons.info.seed)
+                UserDefaultsManager.shared.savePersonPage(page: persons.info.page)
                 
                 completion(.success(persons.results))
             } catch {
@@ -181,12 +180,12 @@ class PersonService {
     }
     
     private func loadMorePersons(results:Int, completion: @escaping (Result<[Person], APError>) -> Void) {
-        guard let retrievedSeed = UserDefaults.standard.string(forKey: Constants.Defaults.personsSeedDefaultKey) else {
+        guard let retrievedSeed = UserDefaultsManager.shared.loadPersonSeed() else {
             completion(.failure(.unableToComplete))
             return
         }
         
-        let nextPage = UserDefaults.standard.integer(forKey: Constants.Defaults.personsPageDefaultKey)+1
+        let nextPage = UserDefaultsManager.shared.loadPersonPage()+1
         
         let urlString = String(format: Constants.API.Person.getMorePersons, nextPage, results, retrievedSeed)
         
@@ -213,7 +212,7 @@ class PersonService {
             
             do {
                 let persons = try JSONDecoder().decode(PersonAPIResponse.self, from: data)
-                UserDefaults.standard.set(nextPage, forKey: Constants.Defaults.personsPageDefaultKey)
+                UserDefaultsManager.shared.savePersonPage(page: nextPage)
                 completion(.success(persons.results))
             } catch {
                 completion(.failure(.invalidData))

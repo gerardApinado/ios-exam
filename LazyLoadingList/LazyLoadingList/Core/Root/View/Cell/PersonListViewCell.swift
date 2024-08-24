@@ -76,7 +76,6 @@ class PersonListViewCell: BaseUITableViewCell {
     }
     
     func configCell(data: Person) {
-        // load avatar Img
         avatarImg.loadImageUsingCache(withUrl: data.picture.large, placeholderImage: UIImage(named: "avatar_placeholder"))
         fullnameLbl.text = "\(data.name.first) \(data.name.last)"
         emailLbl.text = data.email
