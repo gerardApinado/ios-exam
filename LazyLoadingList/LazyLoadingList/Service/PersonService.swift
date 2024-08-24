@@ -7,6 +7,8 @@
 
 import Foundation
 import UIKit
+import RxSwift
+import RxCocoa
 
 final class PersonService {
     
@@ -14,6 +16,11 @@ final class PersonService {
     
     private var persons : [Person]?
     private var contactPerson : [Person.ContactPerson]?
+    
+    private var personsRx : BehaviorRelay<[Person]> = BehaviorRelay(value: [])
+    private var contactPersonRx : BehaviorRelay<[Person.ContactPerson]> = BehaviorRelay(value: [])
+    
+    private var disposeBag = DisposeBag()
     
     private init() {
         
@@ -53,6 +60,65 @@ final class PersonService {
                  completion(.failure(.unableToComplete))
              }
          }
+    }
+    
+    func fetchCompletePersonsDetailsRx(results: Int) -> Observable<[Person]> {
+        return Observable.create { observer in
+            let dispatchGroup = DispatchGroup()
+            
+           dispatchGroup.enter()
+            self.fetchPersonsRx(results: results)
+               .observe(on: MainScheduler.instance)
+//               .bind(to: self.personsRx)
+               .subscribe(
+                onNext: { persons in
+                    self.personsRx.accept(persons)
+                },
+                onError: { error in
+                    dispatchGroup.leave()
+                },
+                onCompleted: {
+                    dispatchGroup.leave()
+                }
+               )
+               .disposed(by: self.disposeBag)
+           
+           dispatchGroup.enter()
+            self.fetchContactPersonRx(results: results)
+               .observe(on: MainScheduler.instance)
+//               .bind(to: self.contactPersonRx)
+               .subscribe(
+                onNext: { contactPerson in
+                    self.contactPersonRx.accept(contactPerson)
+                },
+                onError: { error in
+                    dispatchGroup.leave()
+                },
+                onCompleted: {
+                    dispatchGroup.leave()
+                }
+               )
+               .disposed(by: self.disposeBag)
+            
+            dispatchGroup.notify(queue: .main) {
+                // combine
+//                Observable.combineLatest(self.personsRx, self.contactPersonRx) { persons, contactPersons in
+//                    let count = min(persons.count, contactPersons.count)
+//                    return (0..<count).map { index in
+//                        var updatedPerson = persons[index]
+//                        updatedPerson.contactPerson = contactPersons[index]
+//                        return updatedPerson
+//                    }
+//                }
+//                .bind(to: self.personsRx)
+//                .disposed(by: self.disposeBag)
+                
+                observer.onNext(self.personsRx.value)
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
     }
     
     func loadMoreCompletePersonsDetails(results: Int, completion: @escaping (Result<[Person], APError>) -> Void) {
@@ -108,6 +174,63 @@ final class PersonService {
         }
     }
     
+    private func combineContactPersonRx() -> [Person]? {
+        var arr : [Person]? = []
+        
+//        for var (index,person) in personsRx.enumerated() {
+//            person.contactPerson = contactPerson[index]
+//            arr?.append(person)
+//        }
+        
+        return arr
+    }
+    
+    func fetchPersonsRx(results: Int) -> Observable<[Person]> {
+        let urlString = String(format: Constants.API.Person.getNumberOfPersons, results)
+        
+        return Observable.create { observer in
+            guard let url = URL(string: urlString) else {
+                observer.onError(APError.invalidURL)
+                return Disposables.create()
+            }
+            
+            let task = URLSession.shared.dataTask(with: url) { data, response, error in
+                if let error = error {
+                    observer.onError(APError.unableToComplete)
+                    return
+                }
+                
+                guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                    observer.onError(APError.invalidResponse)
+                    return
+                }
+                
+                guard let data = data else {
+                    observer.onError(APError.invalidData)
+                    return
+                }
+                
+                do {
+                    // fetch 30 Pesons
+                    let persons = try JSONDecoder().decode(PersonAPIResponse.self, from: data)
+                                    
+                    UserDefaultsManager.shared.savePersonSeed(seed: persons.info.seed)
+                    UserDefaultsManager.shared.savePersonPage(page: persons.info.page)
+                    
+                    observer.onNext(persons.results)
+                    observer.onCompleted()
+                } catch {
+                    observer.onError(APError.unableToComplete)
+                }
+            }
+            
+            task.resume()
+            return Disposables.create {
+                task.cancel()
+            }
+        }
+    }
+    
     private func fetchPersons(results: Int, completion: @escaping (Result<[Person], APError>) -> Void) {
         let urlString = String(format: Constants.API.Person.getNumberOfPersons, results)
         
@@ -144,6 +267,46 @@ final class PersonService {
                 completion(.failure(.invalidData))
             }
         }.resume()
+    }
+    
+    func fetchContactPersonRx(results: Int) -> Observable<[Person.ContactPerson]> {
+        let urlString = String(format: Constants.API.Person.getRandomContactPersons, results)
+        return Observable.create { observer in
+            guard let url = URL(string: urlString) else {
+                observer.onError(APError.invalidURL)
+                return Disposables.create()
+            }
+            
+            let task = URLSession.shared.dataTask(with: url) { data, response, error in
+                if let error = error {
+                    observer.onError(APError.unableToComplete)
+                    return
+                }
+                
+                guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                    observer.onError(APError.invalidResponse)
+                    return
+                }
+                
+                guard let data = data else {
+                    observer.onError(APError.invalidData)
+                    return
+                }
+                
+                do {
+                    let persons = try JSONDecoder().decode(ContactPersonAPIResponse.self, from: data)
+                    observer.onNext(persons.results)
+                    observer.onCompleted()
+                } catch {
+                    observer.onError(APError.unableToComplete)
+                }
+            }
+            
+            task.resume()
+            return Disposables.create {
+                task.cancel()
+            }
+        }
     }
     
     private func fetchContactPerson(results:Int, completion: @escaping (Result<[Person.ContactPerson], APError>) -> Void) {

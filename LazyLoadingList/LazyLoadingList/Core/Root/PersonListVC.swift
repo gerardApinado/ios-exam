@@ -36,6 +36,7 @@ class PersonListVC: UIViewController {
             }
         }
         viewModel.fetchPersons()
+        viewModel.fetchPersonsRx()
         
         view = contentView
     }

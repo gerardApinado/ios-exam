@@ -6,11 +6,24 @@
 //
 
 import Foundation
+import RxSwift
+import RxCocoa
 
 class PersonListViewModel {
     
     var persons: [Person]?
     var reloadData: (() -> Void)?
+    
+    var personsRx: BehaviorRelay<[Person]> = BehaviorRelay(value: [])
+    
+    func fetchPersonsRx() {
+        PersonService.shared.fetchCompletePersonsDetailsRx(results: 10)
+            .observe(on: MainScheduler.instance)
+            .bind(to: personsRx)
+            .disposed(by: DisposeBag())
+        
+        print(personsRx.value.count)
+    }
 
     func fetchPersons() {
         if UserDefaultsManager.shared.loadPersonFromUserDefaults() != nil {
