@@ -11,77 +11,36 @@ import RxCocoa
 
 class PersonListViewModel {
     
-    var persons: [Person]?
-    var reloadData: (() -> Void)?
-    
+    let service = PersonService()
     var personsRx: BehaviorRelay<[Person]> = BehaviorRelay(value: [])
+    var disposeBag = DisposeBag()
+    var isFetchingMoreData: Bool = false
     
     func fetchPersonsRx() {
-        PersonService.shared.fetchCompletePersonsDetailsRx(results: 10)
-            .observe(on: MainScheduler.instance)
-            .bind(to: personsRx)
-            .disposed(by: DisposeBag())
-        
-        print(personsRx.value.count)
-    }
-
-    func fetchPersons() {
         if UserDefaultsManager.shared.loadPersonFromUserDefaults() != nil {
-            // reset paging to 1
-            UserDefaultsManager.shared.savePersonPage(page: 1)
-            
             if let localPersons = UserDefaultsManager.shared.loadPersonFromUserDefaults() {
-                self.persons = Array(localPersons.prefix(10))
-                self.reloadData?()
+                let personsToAccept = localPersons.count >= 10
+                ? Array(localPersons.prefix(10))
+                : Array(localPersons.prefix(localPersons.count))
+                
+                self.personsRx.accept(personsToAccept)
             }
             return
         }
         
-        PersonService.shared.fetchCompletePersonsDetails(results: 30) { [weak self] result in
-            switch result {
-            case .success(let data):
-                UserDefaultsManager.shared.savePersonToUserDefaults(person: data)
-                if let localPerson = UserDefaultsManager.shared.loadPersonFromUserDefaults() {
-                    self?.persons = Array(localPerson.prefix(10))
-                    self?.reloadData?()
-                }
-            case .failure(_):
-                print("DEBUG: Error fetching persons complete details")
-            }
-        }
+        service.fetchCompletePersonsDetailsRx(results: 30)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] persons in
+                UserDefaultsManager.shared.savePersonToUserDefaults(person: persons)
+                let personsToAccept = persons.count >= 10
+                ? Array(persons.prefix(10))
+                : Array(persons.prefix(persons.count))
+                self?.personsRx.accept(personsToAccept)
+             })
+            .disposed(by: disposeBag)
     }
     
-    func loadMorePersons(completion: @escaping () -> Void) {
-        // local loading
-        if let persons = self.persons,
-           let localPersons = UserDefaultsManager.shared.loadPersonFromUserDefaults(),
-           persons.count != localPersons.count {
-            
-            let nextPage = UserDefaultsManager.shared.loadPersonPage()+1
-
-            let results = 10*nextPage
-            self.persons = Array(localPersons.prefix(results))
-            self.reloadData?()
-            UserDefaultsManager.shared.savePersonPage(page: nextPage)
-            completion()
-        } else {
-            // remote loading
-            PersonService.shared.loadMoreCompletePersonsDetails(results: 10) { [weak self] result in
-                switch result {
-                case .success(let data):
-                    UserDefaultsManager.shared.appendPersonsToUserDefaults(newPersons: data)
-                    self?.persons = UserDefaultsManager.shared.loadPersonFromUserDefaults()
-                    self?.reloadData?()
-                    completion()
-                case .failure(_):
-                    print("DEBUG: Error fetching more persons complete details")
-                    completion()
-                }
-            }
-        }
-    }
-    
-    func refreshPersons() {
+    func refreshPersonsRx(completion: @escaping () -> Void) {
         if UserDefaultsManager.shared.loadPersonFromUserDefaults() == nil {
             return
         }
@@ -89,18 +48,49 @@ class PersonListViewModel {
         UserDefaultsManager.shared.removePersons()
         UserDefaultsManager.shared.removePersonPage()
         UserDefaultsManager.shared.removePersonSeed()
-        
-        PersonService.shared.fetchCompletePersonsDetails(results: 30) { [weak self] result in
-            switch result {
-            case .success(let data):
-                UserDefaultsManager.shared.savePersonToUserDefaults(person: data)
-                if let localPerson = UserDefaultsManager.shared.loadPersonFromUserDefaults() {
-                    self?.persons = Array(localPerson.prefix(10))
-                    self?.reloadData?()
+           
+        service.fetchCompletePersonsDetailsRx(results: 30)
+            .observe(on: MainScheduler.instance)
+            .subscribe(
+                onNext: { [weak self] persons in
+                UserDefaultsManager.shared.savePersonToUserDefaults(person: persons)
+                let personsToAccept = persons.count >= 10
+                ? Array(persons.prefix(10))
+                : Array(persons.prefix(persons.count))
+                self?.personsRx.accept(personsToAccept)
+                },
+                onCompleted: {
+                    completion()
                 }
-            case .failure(_):
-                print("DEBUG: Error fetching persons complete details")
-            }
+            )
+            .disposed(by: disposeBag)
+    }
+    
+    func loadMorePersonsRx(completion: @escaping () -> Void) {
+        // local loading
+        if let localPersons = UserDefaultsManager.shared.loadPersonFromUserDefaults(),
+           personsRx.value.count != localPersons.count {
+            let nextPage = UserDefaultsManager.shared.loadPersonPage()+1
+            let results = 10*nextPage
+            self.personsRx.accept(Array(localPersons.prefix(results)))
+            UserDefaultsManager.shared.savePersonPage(page: nextPage)
+            completion()
+        } else {
+        // remote loading
+            service.loadMoreCompletePersonsDetailsRx(results: 10)
+                .observe(on: MainScheduler.instance)
+                .subscribe(
+                    onNext: { [weak self] persons in
+                        UserDefaultsManager.shared.appendPersonsToUserDefaults(newPersons: persons)
+                        if let loadedPersons = UserDefaultsManager.shared.loadPersonFromUserDefaults() {
+                            self?.personsRx.accept(loadedPersons)
+                        }
+                    },
+                    onCompleted: {
+                        completion()
+                    }
+                )
+                .disposed(by: disposeBag)
         }
     }
 }
