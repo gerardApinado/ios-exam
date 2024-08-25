@@ -50,5 +50,8 @@ Any libraries or tools of the developer's choosing may be used.
 - Networking: Plain URLSession
 - Local Storage: UserDefaults
 
+- Complete UIKit Native branch: uikit-native/master
+- Complete RxSwift branch: rxswift
+
 
 
