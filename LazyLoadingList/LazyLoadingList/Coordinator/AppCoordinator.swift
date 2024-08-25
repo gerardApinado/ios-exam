@@ -28,6 +28,7 @@ class AppCoordinator {
     
     func routeToPersonDetails(data: Person) {
         let personDetailsVC = PersonDetailsVC(data: data)
+        personDetailsVC.coordinator = self
         navigationController.pushViewController(personDetailsVC, animated: true)
     }
     

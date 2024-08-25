@@ -9,6 +9,8 @@ import UIKit
 
 class PersonDetailsVC: UIViewController {
     
+    var coordinator: AppCoordinator?
+    
     private lazy var contentView: PersonDetailsView = {
         let view = PersonDetailsView()
         view.delegate = self
@@ -36,6 +38,6 @@ class PersonDetailsVC: UIViewController {
 
 extension PersonDetailsVC: PersonDetailsViewDelegate {
     func didTapAvatar(_ view: PersonDetailsView) {
-        self.navigationController?.popViewController(animated: true)
+        coordinator?.popCurrentViewController()
     }
 }
