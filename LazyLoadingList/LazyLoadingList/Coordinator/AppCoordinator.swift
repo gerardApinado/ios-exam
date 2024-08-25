@@ -8,7 +8,13 @@
 import Foundation
 import UIKit
 
-class AppCoordinator {
+protocol Coordinator {
+    func start()
+    func routeToPersonDetails(data: Person)
+    func popCurrentViewController()
+}
+
+class AppCoordinator: Coordinator {
     private let window : UIWindow
     private let navigationController : UINavigationController
     
@@ -28,6 +34,7 @@ class AppCoordinator {
     
     func routeToPersonDetails(data: Person) {
         let personDetailsVC = PersonDetailsVC(data: data)
+        personDetailsVC.coordinator = self
         navigationController.pushViewController(personDetailsVC, animated: true)
     }
     
