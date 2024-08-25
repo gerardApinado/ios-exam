@@ -14,6 +14,8 @@ class PersonListViewModel {
     let service = PersonService()
     var personsRx: BehaviorRelay<[Person]> = BehaviorRelay(value: [])
     var disposeBag = DisposeBag()
+    
+    var page: Int = 1
     var isFetchingMoreData: Bool = false
     
     func fetchPersonsRx() {
@@ -24,6 +26,7 @@ class PersonListViewModel {
                 : Array(localPersons.prefix(localPersons.count))
                 
                 self.personsRx.accept(personsToAccept)
+                self.page = 1 // reset paging to 1
             }
             return
         }
@@ -46,7 +49,6 @@ class PersonListViewModel {
         }
         
         UserDefaultsManager.shared.removePersons()
-        UserDefaultsManager.shared.removePersonPage()
         UserDefaultsManager.shared.removePersonSeed()
            
         service.fetchCompletePersonsDetailsRx(results: 30)
@@ -60,6 +62,7 @@ class PersonListViewModel {
                 self?.personsRx.accept(personsToAccept)
                 },
                 onCompleted: {
+                    self.page = 1
                     completion()
                 }
             )
@@ -70,14 +73,15 @@ class PersonListViewModel {
         // local loading
         if let localPersons = UserDefaultsManager.shared.loadPersonFromUserDefaults(),
            personsRx.value.count != localPersons.count {
-            let nextPage = UserDefaultsManager.shared.loadPersonPage()+1
-            let results = 10*nextPage
+            let nextPageRx = self.page+1
+            let results = 10*nextPageRx
             self.personsRx.accept(Array(localPersons.prefix(results)))
-            UserDefaultsManager.shared.savePersonPage(page: nextPage)
+            self.page = nextPageRx
             completion()
         } else {
         // remote loading
-            service.loadMoreCompletePersonsDetailsRx(results: 10)
+            let nextPageRx = self.page+1
+            service.loadMoreCompletePersonsDetailsRx(results: 10, page: nextPageRx)
                 .observe(on: MainScheduler.instance)
                 .subscribe(
                     onNext: { [weak self] persons in
@@ -87,6 +91,7 @@ class PersonListViewModel {
                         }
                     },
                     onCompleted: {
+                        self.page = nextPageRx
                         completion()
                     }
                 )

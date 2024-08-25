@@ -66,16 +66,5 @@ final class UserDefaultsManager {
     }
     
     //MARK: page
-    func savePersonPage(page: Int) {
-        UserDefaults.standard.set(page, forKey: Constants.Defaults.personsPageDefaultKey)
-    }
-    
-    func loadPersonPage() -> Int {
-        return UserDefaults.standard.integer(forKey: Constants.Defaults.personsPageDefaultKey)
-    }
-    
-    func removePersonPage() {
-        UserDefaults.standard.removeObject(forKey: Constants.Defaults.personsPageDefaultKey)
-    }
     
 }

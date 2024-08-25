@@ -40,9 +40,9 @@ final class PersonService {
             })
     }
     
-    func loadMoreCompletePersonsDetailsRx(results: Int) -> Observable<[Person]> {
+    func loadMoreCompletePersonsDetailsRx(results: Int, page: Int) -> Observable<[Person]> {
         return Observable.zip(
-                self.fetchPersonsRx(results: results)
+                self.loadMorePersonsRx(results: results, page: page)
                     .observe(on: MainScheduler.instance)
                     .catchAndReturn([]),
                 self.fetchContactPersonRx(results: results)
@@ -93,7 +93,6 @@ final class PersonService {
                     let persons = try JSONDecoder().decode(PersonAPIResponse.self, from: data)
                                     
                     UserDefaultsManager.shared.savePersonSeed(seed: persons.info.seed)
-                    UserDefaultsManager.shared.savePersonPage(page: persons.info.page)
                     
                     observer.onNext(persons.results)
                     observer.onCompleted()
@@ -149,15 +148,14 @@ final class PersonService {
         }
     }
     
-    private func loadMorePersonsRx(results: Int) -> Observable<[Person]> {
+    private func loadMorePersonsRx(results: Int, page: Int) -> Observable<[Person]> {
         return Observable.create { observer in
             guard let retrievedSeed = UserDefaultsManager.shared.loadPersonSeed() else {
                 observer.onError(APError.unableToComplete)
                 return Disposables.create()
             }
             
-            let nextPage = UserDefaultsManager.shared.loadPersonPage()+1
-            let urlString = String(format: Constants.API.Person.getMorePersons, nextPage, results, retrievedSeed)
+            let urlString = String(format: Constants.API.Person.getMorePersons, page, results, retrievedSeed)
             
             guard let url = URL(string: urlString) else {
                 observer.onError(APError.invalidURL)
@@ -183,9 +181,7 @@ final class PersonService {
                 do {
                     // fetch 10 Pesons
                     let persons = try JSONDecoder().decode(PersonAPIResponse.self, from: data)
-                                    
-                    UserDefaultsManager.shared.savePersonPage(page: nextPage)
-                    
+                                                        
                     observer.onNext(persons.results)
                     observer.onCompleted()
                 } catch {
