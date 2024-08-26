@@ -130,8 +130,8 @@ final class PersonService {
                 // fetch 30 Pesons
                 let persons = try JSONDecoder().decode(PersonAPIResponse.self, from: data)
                                 
-                UserDefaultsManager.shared.savePersonSeed(seed: persons.info.seed)
-                UserDefaultsManager.shared.savePersonPage(page: persons.info.page)
+                UserDefaultsManager.savePersonSeed(seed: persons.info.seed)
+                UserDefaultsManager.savePersonPage(page: persons.info.page)
                 
                 completion(.success(persons.results))
             } catch {
@@ -174,12 +174,12 @@ final class PersonService {
     }
     
     private func loadMorePersons(results:Int, completion: @escaping (Result<[Person], APError>) -> Void) {
-        guard let retrievedSeed = UserDefaultsManager.shared.loadPersonSeed() else {
+        guard let retrievedSeed = UserDefaultsManager.loadPersonSeed() else {
             completion(.failure(.unableToComplete))
             return
         }
         
-        let nextPage = UserDefaultsManager.shared.loadPersonPage()+1
+        let nextPage = UserDefaultsManager.loadPersonPage()+1
         
         let urlString = String(format: Constants.API.Person.getMorePersons, nextPage, results, retrievedSeed)
         
@@ -206,7 +206,7 @@ final class PersonService {
             
             do {
                 let persons = try JSONDecoder().decode(PersonAPIResponse.self, from: data)
-                UserDefaultsManager.shared.savePersonPage(page: nextPage)
+                UserDefaultsManager.savePersonPage(page: nextPage)
                 completion(.success(persons.results))
             } catch {
                 completion(.failure(.invalidData))

@@ -7,16 +7,10 @@
 
 import Foundation
 
-final class UserDefaultsManager {
-    
-    static let shared = UserDefaultsManager()
-    
-    private init() {
-        
-    }
+struct UserDefaultsManager {
     
     // MARK: person
-    func savePersonToUserDefaults(person: [Person]) {
+    static func savePersonToUserDefaults(person: [Person]) {
         let encoder = JSONEncoder()
         do {
             let data = try encoder.encode(person)
@@ -26,13 +20,13 @@ final class UserDefaultsManager {
         }
     }
     
-    func appendPersonsToUserDefaults(newPersons: [Person]) {
+    static func appendPersonsToUserDefaults(newPersons: [Person]) {
         guard var persons = self.loadPersonFromUserDefaults() else { return }
         persons.append(contentsOf: newPersons)
         self.savePersonToUserDefaults(person: persons)
     }
     
-    func loadPersonFromUserDefaults() -> [Person]? {
+    static func loadPersonFromUserDefaults() -> [Person]? {
         if let data = UserDefaults.standard.data(forKey: Constants.Defaults.personsDefaultKey) {
             let decoder = JSONDecoder()
             do {
@@ -45,36 +39,36 @@ final class UserDefaultsManager {
         return nil
     }
     
-    func removePersons() {
+    static func removePersons() {
         UserDefaults.standard.removeObject(forKey: Constants.Defaults.personsDefaultKey)
     }
     
     //MARK: seed
-    func savePersonSeed(seed: String) {
+    static func savePersonSeed(seed: String) {
         UserDefaults.standard.set(seed, forKey: Constants.Defaults.personsSeedDefaultKey)
     }
     
-    func loadPersonSeed() -> String? {
+    static func loadPersonSeed() -> String? {
         guard let retrievedSeed = UserDefaults.standard.string(forKey: Constants.Defaults.personsSeedDefaultKey) else {
             return nil
         }
         return retrievedSeed
     }
     
-    func removePersonSeed() {
+    static func removePersonSeed() {
         UserDefaults.standard.removeObject(forKey: Constants.Defaults.personsSeedDefaultKey)
     }
     
     //MARK: page
-    func savePersonPage(page: Int) {
+    static func savePersonPage(page: Int) {
         UserDefaults.standard.set(page, forKey: Constants.Defaults.personsPageDefaultKey)
     }
     
-    func loadPersonPage() -> Int {
+    static func loadPersonPage() -> Int {
         return UserDefaults.standard.integer(forKey: Constants.Defaults.personsPageDefaultKey)
     }
     
-    func removePersonPage() {
+    static func removePersonPage() {
         UserDefaults.standard.removeObject(forKey: Constants.Defaults.personsPageDefaultKey)
     }
     

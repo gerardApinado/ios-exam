@@ -12,14 +12,15 @@ class PersonListViewModel {
     private let service = PersonService()
     
     var persons: [Person]?
+    
     var reloadData: (() -> Void)?
 
     func fetchPersons() {
-        if UserDefaultsManager.shared.loadPersonFromUserDefaults() != nil {
+        if UserDefaultsManager.loadPersonFromUserDefaults() != nil {
             // reset paging to 1
-            UserDefaultsManager.shared.savePersonPage(page: 1)
+            UserDefaultsManager.savePersonPage(page: 1)
             
-            if let localPersons = UserDefaultsManager.shared.loadPersonFromUserDefaults() {
+            if let localPersons = UserDefaultsManager.loadPersonFromUserDefaults() {
                 self.persons = Array(localPersons.prefix(10))
                 self.reloadData?()
             }
@@ -29,8 +30,8 @@ class PersonListViewModel {
         service.fetchCompletePersonsDetails(results: 30) { [weak self] result in
             switch result {
             case .success(let data):
-                UserDefaultsManager.shared.savePersonToUserDefaults(person: data)
-                if let localPerson = UserDefaultsManager.shared.loadPersonFromUserDefaults() {
+                UserDefaultsManager.savePersonToUserDefaults(person: data)
+                if let localPerson = UserDefaultsManager.loadPersonFromUserDefaults() {
                     self?.persons = Array(localPerson.prefix(10))
                     self?.reloadData?()
                 }
@@ -43,23 +44,23 @@ class PersonListViewModel {
     func loadMorePersons(completion: @escaping () -> Void) {
         // local loading
         if let persons = self.persons,
-           let localPersons = UserDefaultsManager.shared.loadPersonFromUserDefaults(),
+           let localPersons = UserDefaultsManager.loadPersonFromUserDefaults(),
            persons.count != localPersons.count {
             
-            let nextPage = UserDefaultsManager.shared.loadPersonPage()+1
+            let nextPage = UserDefaultsManager.loadPersonPage()+1
 
             let results = 10*nextPage
             self.persons = Array(localPersons.prefix(results))
             self.reloadData?()
-            UserDefaultsManager.shared.savePersonPage(page: nextPage)
+            UserDefaultsManager.savePersonPage(page: nextPage)
             completion()
         } else {
             // remote loading
             service.loadMoreCompletePersonsDetails(results: 10) { [weak self] result in
                 switch result {
                 case .success(let data):
-                    UserDefaultsManager.shared.appendPersonsToUserDefaults(newPersons: data)
-                    self?.persons = UserDefaultsManager.shared.loadPersonFromUserDefaults()
+                    UserDefaultsManager.appendPersonsToUserDefaults(newPersons: data)
+                    self?.persons = UserDefaultsManager.loadPersonFromUserDefaults()
                     self?.reloadData?()
                     completion()
                 case .failure(_):
@@ -71,19 +72,19 @@ class PersonListViewModel {
     }
     
     func refreshPersons() {
-        if UserDefaultsManager.shared.loadPersonFromUserDefaults() == nil {
+        if UserDefaultsManager.loadPersonFromUserDefaults() == nil {
             return
         }
         
-        UserDefaultsManager.shared.removePersons()
-        UserDefaultsManager.shared.removePersonPage()
-        UserDefaultsManager.shared.removePersonSeed()
+        UserDefaultsManager.removePersons()
+        UserDefaultsManager.removePersonPage()
+        UserDefaultsManager.removePersonSeed()
         
         service.fetchCompletePersonsDetails(results: 30) { [weak self] result in
             switch result {
             case .success(let data):
-                UserDefaultsManager.shared.savePersonToUserDefaults(person: data)
-                if let localPerson = UserDefaultsManager.shared.loadPersonFromUserDefaults() {
+                UserDefaultsManager.savePersonToUserDefaults(person: data)
+                if let localPerson = UserDefaultsManager.loadPersonFromUserDefaults() {
                     self?.persons = Array(localPerson.prefix(10))
                     self?.reloadData?()
                 }
