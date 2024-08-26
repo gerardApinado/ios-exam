@@ -9,15 +9,9 @@ import Foundation
 import UIKit
 
 final class PersonService {
-    
-    static let shared = PersonService()
-    
+        
     private var persons : [Person]?
     private var contactPerson : [Person.ContactPerson]?
-    
-    private init() {
-        
-    }
     
     //MARK: public methods
     func fetchCompletePersonsDetails(results: Int, completion: @escaping (Result<[Person], APError>) -> Void) {

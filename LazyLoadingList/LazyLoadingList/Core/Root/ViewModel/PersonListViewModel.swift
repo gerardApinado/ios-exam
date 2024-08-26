@@ -9,6 +9,8 @@ import Foundation
 
 class PersonListViewModel {
     
+    private let service = PersonService()
+    
     var persons: [Person]?
     var reloadData: (() -> Void)?
 
@@ -24,7 +26,7 @@ class PersonListViewModel {
             return
         }
         
-        PersonService.shared.fetchCompletePersonsDetails(results: 30) { [weak self] result in
+        service.fetchCompletePersonsDetails(results: 30) { [weak self] result in
             switch result {
             case .success(let data):
                 UserDefaultsManager.shared.savePersonToUserDefaults(person: data)
@@ -53,7 +55,7 @@ class PersonListViewModel {
             completion()
         } else {
             // remote loading
-            PersonService.shared.loadMoreCompletePersonsDetails(results: 10) { [weak self] result in
+            service.loadMoreCompletePersonsDetails(results: 10) { [weak self] result in
                 switch result {
                 case .success(let data):
                     UserDefaultsManager.shared.appendPersonsToUserDefaults(newPersons: data)
@@ -77,7 +79,7 @@ class PersonListViewModel {
         UserDefaultsManager.shared.removePersonPage()
         UserDefaultsManager.shared.removePersonSeed()
         
-        PersonService.shared.fetchCompletePersonsDetails(results: 30) { [weak self] result in
+        service.fetchCompletePersonsDetails(results: 30) { [weak self] result in
             switch result {
             case .success(let data):
                 UserDefaultsManager.shared.savePersonToUserDefaults(person: data)
