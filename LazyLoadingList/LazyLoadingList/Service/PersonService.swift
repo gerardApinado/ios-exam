@@ -92,7 +92,7 @@ final class PersonService {
                     // fetch 30 Pesons
                     let persons = try JSONDecoder().decode(PersonAPIResponse.self, from: data)
                                     
-                    UserDefaultsManager.shared.savePersonSeed(seed: persons.info.seed)
+                    UserDefaultsManager.savePersonSeed(seed: persons.info.seed)
                     
                     observer.onNext(persons.results)
                     observer.onCompleted()
@@ -150,7 +150,7 @@ final class PersonService {
     
     private func loadMorePersonsRx(results: Int, page: Int) -> Observable<[Person]> {
         return Observable.create { observer in
-            guard let retrievedSeed = UserDefaultsManager.shared.loadPersonSeed() else {
+            guard let retrievedSeed = UserDefaultsManager.loadPersonSeed() else {
                 observer.onError(APError.unableToComplete)
                 return Disposables.create()
             }

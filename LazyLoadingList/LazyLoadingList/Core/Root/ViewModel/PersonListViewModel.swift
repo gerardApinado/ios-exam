@@ -19,8 +19,8 @@ class PersonListViewModel {
     var isFetchingMoreData: Bool = false
     
     func fetchPersonsRx() {
-        if UserDefaultsManager.shared.loadPersonFromUserDefaults() != nil {
-            if let localPersons = UserDefaultsManager.shared.loadPersonFromUserDefaults() {
+        if UserDefaultsManager.loadPersonFromUserDefaults() != nil {
+            if let localPersons = UserDefaultsManager.loadPersonFromUserDefaults() {
                 let personsToAccept = localPersons.count >= 10
                 ? Array(localPersons.prefix(10))
                 : Array(localPersons.prefix(localPersons.count))
@@ -34,7 +34,7 @@ class PersonListViewModel {
         service.fetchCompletePersonsDetailsRx(results: 30)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] persons in
-                UserDefaultsManager.shared.savePersonToUserDefaults(person: persons)
+                UserDefaultsManager.savePersonToUserDefaults(person: persons)
                 let personsToAccept = persons.count >= 10
                 ? Array(persons.prefix(10))
                 : Array(persons.prefix(persons.count))
@@ -44,18 +44,18 @@ class PersonListViewModel {
     }
     
     func refreshPersonsRx(completion: @escaping () -> Void) {
-        if UserDefaultsManager.shared.loadPersonFromUserDefaults() == nil {
+        if UserDefaultsManager.loadPersonFromUserDefaults() == nil {
             return
         }
         
-        UserDefaultsManager.shared.removePersons()
-        UserDefaultsManager.shared.removePersonSeed()
+        UserDefaultsManager.removePersons()
+        UserDefaultsManager.removePersonSeed()
            
         service.fetchCompletePersonsDetailsRx(results: 30)
             .observe(on: MainScheduler.instance)
             .subscribe(
                 onNext: { [weak self] persons in
-                UserDefaultsManager.shared.savePersonToUserDefaults(person: persons)
+                UserDefaultsManager.savePersonToUserDefaults(person: persons)
                 let personsToAccept = persons.count >= 10
                 ? Array(persons.prefix(10))
                 : Array(persons.prefix(persons.count))
@@ -71,7 +71,7 @@ class PersonListViewModel {
     
     func loadMorePersonsRx(completion: @escaping () -> Void) {
         // local loading
-        if let localPersons = UserDefaultsManager.shared.loadPersonFromUserDefaults(),
+        if let localPersons = UserDefaultsManager.loadPersonFromUserDefaults(),
            personsRx.value.count != localPersons.count {
             let nextPageRx = self.page+1
             let results = 10*nextPageRx
@@ -85,8 +85,8 @@ class PersonListViewModel {
                 .observe(on: MainScheduler.instance)
                 .subscribe(
                     onNext: { [weak self] persons in
-                        UserDefaultsManager.shared.appendPersonsToUserDefaults(newPersons: persons)
-                        if let loadedPersons = UserDefaultsManager.shared.loadPersonFromUserDefaults() {
+                        UserDefaultsManager.appendPersonsToUserDefaults(newPersons: persons)
+                        if let loadedPersons = UserDefaultsManager.loadPersonFromUserDefaults() {
                             self?.personsRx.accept(loadedPersons)
                         }
                     },
