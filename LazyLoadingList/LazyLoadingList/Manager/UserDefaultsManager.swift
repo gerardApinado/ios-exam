@@ -58,18 +58,5 @@ struct UserDefaultsManager {
     static func removePersonSeed() {
         UserDefaults.standard.removeObject(forKey: Constants.Defaults.personsSeedDefaultKey)
     }
-    
-    //MARK: page
-    static func savePersonPage(page: Int) {
-        UserDefaults.standard.set(page, forKey: Constants.Defaults.personsPageDefaultKey)
-    }
-    
-    static func loadPersonPage() -> Int {
-        return UserDefaults.standard.integer(forKey: Constants.Defaults.personsPageDefaultKey)
-    }
-    
-    static func removePersonPage() {
-        UserDefaults.standard.removeObject(forKey: Constants.Defaults.personsPageDefaultKey)
-    }
-    
+        
 }

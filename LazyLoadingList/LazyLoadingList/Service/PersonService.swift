@@ -40,7 +40,6 @@ final class PersonService {
         }
          
          dispatchGroup.notify(queue: .main) {
-             // completion
              if let persons = self.combineContactPerson() {
                  completion(.success(persons))
              } else {
@@ -49,11 +48,11 @@ final class PersonService {
          }
     }
     
-    func loadMoreCompletePersonsDetails(results: Int, completion: @escaping (Result<[Person], APError>) -> Void) {
+    func loadMoreCompletePersonsDetails(results: Int, page:Int, completion: @escaping (Result<[Person], APError>) -> Void) {
         let dispatchGroup = DispatchGroup()
         
         dispatchGroup.enter()
-        loadMorePersons(results: results) { [weak self] result in
+        loadMorePersons(results: results, page: page) { [weak self] result in
             switch result {
             case .success(let data):
                 self?.persons = data
@@ -127,12 +126,8 @@ final class PersonService {
             }
             
             do {
-                // fetch 30 Pesons
                 let persons = try JSONDecoder().decode(PersonAPIResponse.self, from: data)
-                                
                 UserDefaultsManager.savePersonSeed(seed: persons.info.seed)
-                UserDefaultsManager.savePersonPage(page: persons.info.page)
-                
                 completion(.success(persons.results))
             } catch {
                 completion(.failure(.invalidData))
@@ -173,15 +168,13 @@ final class PersonService {
         }.resume()
     }
     
-    private func loadMorePersons(results:Int, completion: @escaping (Result<[Person], APError>) -> Void) {
+    private func loadMorePersons(results:Int, page:Int, completion: @escaping (Result<[Person], APError>) -> Void) {
         guard let retrievedSeed = UserDefaultsManager.loadPersonSeed() else {
             completion(.failure(.unableToComplete))
             return
         }
-        
-        let nextPage = UserDefaultsManager.loadPersonPage()+1
-        
-        let urlString = String(format: Constants.API.Person.getMorePersons, nextPage, results, retrievedSeed)
+                
+        let urlString = String(format: Constants.API.Person.getMorePersons, page, results, retrievedSeed)
         
         guard let url = URL(string: urlString) else {
             completion(.failure(.invalidURL))
@@ -206,7 +199,6 @@ final class PersonService {
             
             do {
                 let persons = try JSONDecoder().decode(PersonAPIResponse.self, from: data)
-                UserDefaultsManager.savePersonPage(page: nextPage)
                 completion(.success(persons.results))
             } catch {
                 completion(.failure(.invalidData))

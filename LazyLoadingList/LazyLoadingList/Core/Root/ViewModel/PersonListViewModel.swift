@@ -14,12 +14,12 @@ class PersonListViewModel {
     var persons: [Person]?
     
     var reloadData: (() -> Void)?
+    var page: Int = 1
 
     func fetchPersons() {
         if UserDefaultsManager.loadPersonFromUserDefaults() != nil {
             // reset paging to 1
-            UserDefaultsManager.savePersonPage(page: 1)
-            
+            page = 1
             if let localPersons = UserDefaultsManager.loadPersonFromUserDefaults() {
                 self.persons = Array(localPersons.prefix(10))
                 self.reloadData?()
@@ -47,21 +47,25 @@ class PersonListViewModel {
            let localPersons = UserDefaultsManager.loadPersonFromUserDefaults(),
            persons.count != localPersons.count {
             
-            let nextPage = UserDefaultsManager.loadPersonPage()+1
+            let nextPage = page+1
 
             let results = 10*nextPage
             self.persons = Array(localPersons.prefix(results))
             self.reloadData?()
-            UserDefaultsManager.savePersonPage(page: nextPage)
+
+            page = nextPage
             completion()
         } else {
             // remote loading
-            service.loadMoreCompletePersonsDetails(results: 10) { [weak self] result in
+            let nextPage = page+1
+            
+            service.loadMoreCompletePersonsDetails(results: 10, page: nextPage) { [weak self] result in
                 switch result {
                 case .success(let data):
                     UserDefaultsManager.appendPersonsToUserDefaults(newPersons: data)
                     self?.persons = UserDefaultsManager.loadPersonFromUserDefaults()
                     self?.reloadData?()
+                    self?.page = nextPage
                     completion()
                 case .failure(_):
                     print("DEBUG: Error fetching more persons complete details")
@@ -77,7 +81,6 @@ class PersonListViewModel {
         }
         
         UserDefaultsManager.removePersons()
-        UserDefaultsManager.removePersonPage()
         UserDefaultsManager.removePersonSeed()
         
         service.fetchCompletePersonsDetails(results: 30) { [weak self] result in
@@ -85,6 +88,7 @@ class PersonListViewModel {
             case .success(let data):
                 UserDefaultsManager.savePersonToUserDefaults(person: data)
                 if let localPerson = UserDefaultsManager.loadPersonFromUserDefaults() {
+                    self?.page = 1
                     self?.persons = Array(localPerson.prefix(10))
                     self?.reloadData?()
                 }
